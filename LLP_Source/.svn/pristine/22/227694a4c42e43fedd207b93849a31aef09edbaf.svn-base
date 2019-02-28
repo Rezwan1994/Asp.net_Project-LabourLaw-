@@ -1,0 +1,152 @@
+﻿@model LLP.Web.BookChapter
+@{
+    Layout = "~/Views/Shared/_llpLayout.cshtml";
+
+}
+ <!--/.header-->
+
+<link href="~/Content/css/book.css" rel="stylesheet" />
+<div class="Chapter">
+    @*<div class="container">*@
+
+    <div class="header ">
+        <div class="row">
+            <div class="col-md-10"><h2>Chapters</h2></div>
+            <div class="col-md-2">
+                <input type="text" id="search" placeholder="Search In your book..">
+     
+                <div id="searchSuggestion" class="suggestion"  style="float:left; z-index:9;position:relative;">
+
+                </div>
+            </div>
+           
+        </div>
+      
+    </div>
+
+    <div class="row">
+        <div class="col-md-2">
+
+            <div class="Chapter_List">
+          
+                <div style="padding:10px; ">
+                    <div class="treeview">
+                        @foreach (var a in Model.ChapterList)
+                        {
+                            <h4 id="txtChapt">@a.Name</h4>
+
+                            if (Model.ContentList != null && Model.ContentList.Count() > 0)
+                            {
+
+                                <ul class="ChapterName" id="txtChaptername">
+                                    @TreeView.GetTreeView(Model.ContentList, Model.ContentList.FirstOrDefault().ParentId, Convert.ToInt32(a.ChapterNo))
+
+                                </ul>
+                            }
+
+                        }
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div class="Chapter_Content" id="cpcontent">
+
+
+            </div>
+           
+        </div>
+    </div>
+
+</div>
+
+<script src="~/Content/scripts/jquery.min.js"></script>
+
+<script>
+        $(document).ready(function () {
+            $(".treeview li>ul").css('display', 'none'); // Hide all 2-level ul
+            $(".collapsible").click(function (e) {
+                e.preventDefault();
+                $(this).toggleClass("collapse expand");
+                $(this).closest('li').children('ul').slideToggle();
+            });
+        });
+
+
+
+        $(document).ready(function () {
+            $(".title").click(function (item) {
+                var clickitem = $(item.target).attr('data-location');
+                $(".Chapter_Content").load(clickitem);
+            })
+        });
+
+
+
+
+        $(document).ready(function () {
+            $(".ContentTitle").click(function (item) {
+                var clickitem1 = $(item.target).attr('data-location');
+
+                $(".Chapter_Content").load(clickitem1);
+            })
+        });
+
+
+
+
+
+
+
+        $(document).ready(function () {
+            $("input").keyup(function () {
+
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("SearchInbook", "Home")',
+                dataType: "json",
+                data: { search: $("#search").val() },
+                success: function (data) {
+                   $('#cpcontent').html("");
+                    //'<br>';
+                   // console.log(data);
+                    var suggestionlist = '';
+
+                    for (var sterm = 0; sterm < data.length; sterm++) {
+
+                        var item = data[sterm];
+                        suggestionlist += ('<p class="chapter" data-location="/Home/ShowContentbyTitle?Title=' + encodeURIComponent(item)+'" onclick="myFunction(this)" item="' + item + '" >' + data[sterm] + '</p>');
+                       // suggestionlist += ('<a class="ContentTitle" onclick="LinkAssign(this)" item="' + gurl+'" >' + data[sterm]+ '</a> <br>');
+
+                    }
+                    $('#searchSuggestion').html('<div class="forborder">' + suggestionlist +'</div>');
+
+                },
+                error: function (xhr, status, error) {
+                    alert("Error");
+                }
+            });
+
+
+            })
+
+
+    });
+
+        var myFunction = function (item) {
+            //var clickitem1 = $(item.target).attr('data-location');data-location='+gurl+'
+            //  encodeURIComponent(_href))
+            var value = $(item).attr("item");
+            var clickitem = $(item).attr('data-location');
+           // alert(clickitem);
+            $('#searchSuggestion').html("");
+            $(".Chapter_Content").load(clickitem);
+           // alert(value);
+            //$(".Chapter_Content").load(clickitem1);
+             // data - location="/Home/ShowContentbyTitle?Title=value";
+
+        }
+      //
+
+</script>

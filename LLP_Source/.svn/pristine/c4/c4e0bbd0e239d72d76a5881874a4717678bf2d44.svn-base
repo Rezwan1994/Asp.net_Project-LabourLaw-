@@ -1,0 +1,144 @@
+/*Here We will add some css for style our treeview*/
+body {
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    color: #444;
+}
+.treeview .collapse {
+    width:15px;
+    background-image: url('../../Content/images/treeview.png');
+    background-repeat: no-repeat;
+    background-position: -36px -17px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.expand {
+    width: 15px;
+    background-image: url('../../Content/images/treeview.png');
+    background-repeat: no-repeat;
+    background-position: -50px -17px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.treeview ul {
+    font: 14px Arial, Sans-Serif;
+    margin: 0px;
+    padding-left: 20px;
+    list-style: none;
+}
+
+.treeview > li > a {
+    font-weight: bold;
+}
+
+
+
+.treeview li a {
+    padding: 4px;
+    font-size: 12px;
+    display: inline-block;
+    text-decoration: none;
+    width: auto;
+    color:black;
+}
+.treeview li a:hover {
+    color: blue;
+}
+.Chapter_List {
+   
+    min-height: 450px;
+}
+.suggestion {
+    width: calc(100% - 45px);
+    display: block;
+    background-color: white;
+    border: 1px solid #DDDDDD;
+    margin-top:-2px;
+    cursor: pointer;
+    position: absolute;
+    z-index: 1;
+    display: none;
+}
+
+
+.chapter {
+    display: block;
+    width: 100%;
+    color: blue;
+    font-weight: bold;
+    padding-left: 16px;
+
+}
+
+    .chapter:hover {
+        background-color: #DDDDDD;
+    }
+.forborder {
+    display: block;
+    width: 100%;
+    color: blue;
+    font-weight: bold;
+    padding-left: 16px;
+    padding: 5px
+}
+
+
+
+
+#sidescroll {
+    width:100%;
+
+
+   
+}
+
+.stick {
+    position: fixed;
+    top: 20px;
+    display: block;
+}
+.headerstick {
+    position: fixed;
+    top: 0px;
+    display: block;
+}
+
+#txtChapt {
+    background-color: #0050C5;
+    color: white;
+    padding: 4px;
+}
+
+#search {
+    border: 1px solid #DDDDDD;
+    display: block;
+    margin-left: 10px;
+    margin-top: 13px;
+    width: 230px;
+    padding: 6px;
+}
+#top_bar{
+    width:100%;
+}
+#cpcontent {
+    margin-left: 40px;
+    text-align: justify;
+}
+#cpcontent h3 {
+    font-size: 14px;
+    line-height: 20px;
+}
+
+
+#right_content{
+    overflow-y:scroll;
+    overflow-x:hidden;
+    width:79%;
+    height:602px;
+
+}
+
+

@@ -1,0 +1,177 @@
+﻿@model LLP.Entities.UserLogin
+@using Localize = LLP.Web.Ui.Helper.LanguageHelper
+@{
+    Layout = "~/Views/Shared/_llpLayout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    @*<meta charset="UTF-8">*@
+    <title>Sign up</title>
+    <link href="~/Content/css/signup_style.css" rel="stylesheet" />
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/pnotify.css" rel="stylesheet" />
+    <link href="~/Content/css/pnotify.buttons.css" rel="stylesheet" />
+    <link href="~/Content/css/pnotify.nonblock.css" rel="stylesheet" />
+    <script src="~/Content/scripts/jquery.min.js"></script>
+
+    <script src="~/Content/scripts/pnotify.js"></script>
+    <script src="~/Content/scripts/pnotify.nonblock.js"></script>
+    <script src="~/Content/scripts/pnotify.buttons.js"></script>
+    <script src="~/Content/scripts/googlelogin.js"></script>
+    <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};HandleGoogleApiLibrary()" onreadystatechange="if (this.readyState === 'complete') this.onload()"></script>
+</head>
+
+<body>
+  
+
+    <div id="login-box">
+        <div class="left">
+            <h1>@Localize.T("Sign up")</h1>
+
+            @Html.HiddenFor(m => m.Id)
+            <input type="text" id="name" name ="username" placeholder=@Localize.T("Username") />
+            <input type="text" id="email" name="email" placeholder=@Localize.T("Email") />
+            <input type="password" id="password" name="password" placeholder=@Localize.T("Password") />
+            <input type="password" id="repass" name="password2" placeholder=@Localize.T("Retype password") />
+
+            <input type="submit" id="signup" name ="signup_submit" value=@Localize.T("Sign me up") />
+        </div>
+
+        <div class="right">
+            <img src="~/Content/images/labour_law_logo.png" alt="Alternate Text" />
+            <span class="loginwith">Sign in with<br />social network</span>
+
+            <button class="social-signin facebook" onclick="register_user_after_facebook_login() ">@Localize.T("Log in with facebook")</button>
+            <button class="social-signin twitter">@Localize.T("Log in with Linkedin")</button>
+            <button class="social-signin google" id="googlelogin">@Localize.T("Log in with Google +")</button>
+        </div>
+        <div class="or">OR</div>
+    </div>
+
+    <a id="link" ></a>
+
+</body>
+
+</html>
+<script>
+
+        $(document).ready(function () {
+
+            $('#signup').click(function () {
+            var content = {};
+            content.Id = $("#Id").val();
+            content.UserName = $("#name").val();
+            content.EmailAddress = $("#email").val();
+            content.IsActive = " ";
+            content.IsDeleted = " ";
+            content.LastUpdatedBy = "";
+            content.LastUpdatedDate = "";
+
+            content.Password = $("#password").val();
+
+            $.ajax({
+                type: "POST",
+                url: "/Home/SaveUser",
+                data: '{content: ' + JSON.stringify(content) + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.result == true) {
+                        $("#email").val('');
+                        $("#password").val('');
+                        $("#name").val('');
+                        $("#repass").val('');
+                       // alert(response.Messege);
+                        $('#link').html("Click To Activate");
+                        $('#link').prop('href', response.Messege);
+
+                        new PNotify({
+                            title: 'Saved Successfully',
+                            text: " Click the Link below to Active your Account" ,
+                            type: 'success',
+                            styling: 'bootstrap3'
+                        });
+                       // window.location.reload();
+                    }
+                    else {
+
+                        new PNotify({
+                            title: 'email exist',
+                            text: 'email already exist',
+                            type: 'error',
+                            styling: 'bootstrap3'
+                        });
+                    }
+
+
+                    //window.location.reload();
+                }
+            });
+        });
+            // Load the SDK asynchronously
+            (function (d) {
+                var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+                if (d.getElementById(id)) { return; }
+                js = d.createElement('script'); js.id = id; js.async = true;
+                js.src = "//connect.facebook.net/en_US/all.js";
+                ref.parentNode.insertBefore(js, ref);
+            }(document));
+
+
+
+            });
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: 338614153317805,
+                cookie: true, // enable cookies to allow the server to access the session
+                xfbml: true
+            });
+
+
+        }
+        function register_user_after_facebook_login() {
+            FB.login(function (response) {
+               // if (response.authResponse) {
+                    FB.api('/me', { fields: 'id,name,email,link' }, function (response) {
+                        //dummy data from local
+                        response.EmailAddress = 'auiarafat@gmail.com';
+                        response.Id = 23;
+                        response.IsActive = true;
+                        response.UserName = "Mijan";
+                        response.Password ="Mijan"
+                        UserResitrationifnorecord(response);
+                    });
+                //} else {
+                //    console.log('user does not interested or not authorized.');
+                //}
+            }, { scope: 'public_profile, email', return_scopes: true });
+        }
+
+        var UserResitrationifnorecord = function (fbdata) {
+            //SErver Create account
+            //server Login
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/Login_by_Fb",
+                    data: '{content: ' + JSON.stringify(fbdata) + '}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response);
+                        if (response.result == true) {
+
+                            window.location.href = "/Admin/DashBoard";
+                        }
+                        else {
+                            alert('please contact with admin!!!');
+                        }
+
+                    }
+                });
+        }
+
+</script>

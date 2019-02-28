@@ -1,0 +1,249 @@
+﻿
+@using Localize = LLP.Web.Ui.Helper.LanguageHelper
+@{
+    Layout = "~/Views/Shared/_llpLayout.cshtml";
+
+}
+<link href="https://fonts.googleapis.com/css?family=Do+Hyeon" rel="stylesheet">
+<link href="~/Content/css/perfect-scrollbar.css" rel="stylesheet" />
+<style>
+    #partial_View {
+        float: left;
+        height: 500px;
+        width: 250px;
+     
+   
+        margin-bottom: 25px;
+        overflow: auto;
+        position: relative;
+    }
+</style>
+ <!--/.header-->
+
+<link href="~/Content/css/book.css" rel="stylesheet" />
+<div class="Chapter">
+    @*<div class="container">*@
+
+
+    <div class="constant">
+        <div class="container" id="sidescroll">
+            <div class="row" >
+                <div class="col-md-2 col-sm-3 col-xs-4">
+                 
+                    <div id="sticker">
+                        <input type="text" id="search" placeholder="Search In your book..">
+                        <div class="scrollbar scrollbar-primary" id="partial_View">
+                           
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 col-sm-8 col-xs-8">
+                    <h3 style="text-align:center;font-family: 'Do Hyeon', sans-serif;">Bangladesh Labour Rule</h3>
+                    <div class="Chapter_Content" id="cpcontent">
+                        <h2>Introduction</h2>
+
+                        In these days many companies and their managers are all too often faced different complexities and hassles in managing staffs, issues of compliances, projects and specialized knowledge in relation to legal & ethical perspectives. Moreover, human resource department of many organizations/companies is not always aware enough of the arrangement of their individual department, obligation related to employment standards (including wage and payment, leave facilities, benefits, process of termination and safety standard etc.) and even many of them are not conscious to define employment procedures clearly. To meet such need necessitates many organizations/companies and also individual look for assistance from specialized skill providers. In this backdrop, this course offer to provide technical supports for knowledge development on labour law issues and its efficient implication. It can be assumed that improved knowledge on labour law can minimize common mistakes, reduce tension of industrial relation and organizational costs at a large.
+
+                        Since independence of Bangladesh, no major development took place in the history of labour legislation till the enactment of the Bangladesh Labour Act, 2006. The Bangladesh Labour Act, 2006 is a major and comprehensive enactment regarding industrial relation which is the consolidation and updating of the 25 separate acts. But recently the law has changed by a big reform under the initiative of the govt. The comprehensive nature of the law can immediately be gleaned from its coverage including conditions of service and employment, youth employment, maternity benefit, health and hygiene, safety, welfare, working hours and leave, wages and payment, workers compensation for injury, trade unions and industrial relations, disputes, labour court, workers participation in companies profits, regulation of employment and safety of dock workers, provident funds, apprenticeship, penalty and procedure, administration, inspection, etc.
+
+                        while using the Bangladesh labor Act 2006 companies found a lot of lacunas, so that govt formed a committee to remove all the lacunas, the committee worked for last five years and thus the Bangladesh labor (amendment) Act 2013 removes certain ambiguities in the old and diverse labour acts and aligns the labour law system in line with the ILO core conventions. In the new law the definition of a worker is very specific and certain welfare and social benefits have been improved. The new change emphasis new definitions and classifications of worker, Trade union for workers, profit participation, out sourcing, and many more. Laws updated but the procedural guideline are missing so the government stated to enact Bangladesh Labor Rule in 2009. The Bangladesh Labor Rule 2015 published as gazette in September, 15 2015 a lot of new regulations also came to update the safety regulations and regulate the industrial Relation of Bangladesh.
+
+                        The managers and the mid level employees of the companies are well aware and trained on business enhancement and production related matters but they are not trained on law and related issues. At present (i) Compliance issues are inadequately addressed and the buyers create more pressure day by day in the name of Compliance , (ii) the employers and employees are not aware of their rights and the connotation of the new labor law, (iii) the employers and employees are not aware about the changes in Bangladesh Labor Rule 2015 (iv) the employers and employees are not aware about the changes in Bangladesh Labor Rule 2015 (v) the employers are not aware about industrial dispute resolving mechanism under Bangladesh Labor Rule 2015 (v) Employers are not aware about health and safety system Bangladesh Labor Rule 2015 (vi) Mid level staff members are not legally sound about HR practices and procedures Bangladesh Labor Rule 2015. Therefore, it is expected that the management of different establishment, realizing the importance of this subject, will come forward to build up a panel of Managers/Officers who could be used in future as and when required.
+
+                    </div>
+
+                </div>
+               
+            </div>
+        </div>
+    </div>
+    
+
+</div>
+
+<script src="~/Content/scripts/jquery.min.js"></script>
+<script src="~/Content/scripts/perfect-scrollbar.js"></script>
+<script>
+ 
+   
+    var ps = new PerfectScrollbar('#partial_View');
+
+    $(document).ready(function () {
+        ps.update();
+    })
+</script>
+
+
+<script>
+
+   
+
+
+
+
+
+    var myFunction = function(){
+  
+   
+        var input, filter, table, tr, td, i;
+        input = document.getElementById("search");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+
+  
+        tr = table.getElementsByClassName("ChapterName");
+
+        for (i = 0; i < tr.length; i++) {
+            tdlength = $('.' + tr[0].className).children().length
+            for (j = 0; j < tdlength; j++)
+            {
+                td = $('.' + tr[i].className).children().children().children()[j].innerHTML;
+              
+                if (td) {
+                    if (td.toUpperCase().indexOf(filter) > -1) {
+                        $('.' + tr[i].className).children().children().children()[j].style.visibility = "visible";
+                       // $('.' + tr[i].className).children().children().children()[j].style.display = "block";
+                       // table.style.display = "block";
+                        tr[i].style.display = "";
+                        console.log(td);
+                    } else {
+                        $('.' + tr[i].className).children().children().children()[j].style.visibility = "hidden";
+                       
+                    }
+                    //if (filter.length == 0) {
+                    //    table.style.display = "none";
+                    //    tab.style.display = "none";
+                    //}
+                }
+            }
+          
+        }
+    }
+    
+
+
+
+
+
+
+        $(".ContentTitle").click(function (item) {
+            var clickitem1 = $(item.target).attr('data-location');
+
+            $(".Chapter_Content").load(clickitem1);
+        })
+
+
+
+
+
+
+
+
+        @*$("input").keyup(function () {
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("SearchInbook", "Home")',
+                dataType: "json",
+                data: { search: $("#search").val() },
+                success: function (data) {
+                    $('#cpcontent').html("");
+                    //'<br>';
+                    // console.log(data);
+                    var suggestionlist = '';
+
+                    for (var sterm = 0; sterm < data.length; sterm++) {
+
+                        var item = data[sterm];
+                        $('#searchSuggestion').show();
+                        suggestionlist += ('<p class="chapter" data-location="/Home/ShowContentbyTitle?Title=' + encodeURIComponent(item) + '" onclick="myFunction(this)" item="' + item + '" >' + data[sterm] + '</p>');
+                        // suggestionlist += ('<a class="ContentTitle" onclick="LinkAssign(this)" item="' + gurl+'" >' + data[sterm]+ '</a> <br>');
+
+                    }
+                    $('#searchSuggestion').html('<div class="forborder">' + suggestionlist + '</div>');
+
+                },
+                error: function (xhr, status, error) {
+                    alert("Error");
+                }
+            });
+
+
+        })*@
+
+
+
+
+        var s = $("#sticker");
+        var h = $("headersticker");
+        var pos = s.position();
+        $(window).scroll(function () {
+            var windowpos = $(window).scrollTop();
+            console.log(windowpos + " " + pos);
+            if (windowpos > pos.top) {
+                s.addClass("stick");
+                h.addClass("headerstick");
+            } else if (windowpos == 0) {
+                console.log("dfgdfg");
+                s.removeClass("stick");
+            }
+        });
+
+
+
+        //var myFunction = function (item) {
+        //    //var clickitem1 = $(item.target).attr('data-location');data-location='+gurl+'
+        //    //  encodeURIComponent(_href))
+        //    var value = $(item).attr("item");
+        //    var clickitem = $(item).attr('data-location');
+        //    // alert(clickitem);
+        //    $('#searchSuggestion').html("");
+        //    $(".Chapter_Content").load(clickitem);
+        //    // alert(value);
+        //    //$(".Chapter_Content").load(clickitem1);
+        //    // data - location="/Home/ShowContentbyTitle?Title=value";
+
+        //}
+        var NavigatePageListing = function () {
+            var searchText = $("#search").val();
+            $("#partial_View").load("/Home/TreePartialView", { SearchText: searchText});
+        }
+            //alert(pageNumber);
+            //if (typeof (pageNumber) == "undefined") {
+            //    return;
+            //}
+    
+            //var FilterKey = $("#PropertyListingCategory").val();
+     
+    
+            //$("#partialViewLoadListing").load("/JobsCategory/JobList", { FilterKey: FilterKey, CompanyId: AgencyId, SearchText: searchText, PageNumber: pageNumber, UnitPerPage: unitperpage });
+        var delay = (function () {
+            var timer = 0;
+            return function (callback, ms) {
+                clearTimeout(timer);
+                timer = setTimeout(callback, ms);
+            };
+        })();
+        
+        $(document).ready(function(){
+            $('#search').keyup(function () {
+                delay(function () {
+                    NavigatePageListing();
+                }, 100);
+               
+          
+           
+            })
+
+            $("#partial_View").load("/Home/TreePartialView")
+
+
+        
+        });
+          
+        
+
+
+      //
+
+</script>

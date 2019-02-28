@@ -1,0 +1,177 @@
+﻿using LLP.Entities;
+using LLP.Facade;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace LLP.Web.Controllers
+{
+    public class AdminController : BaseController
+    {
+        // GET: Default
+       
+
+        public ActionResult Dashboard()
+        {
+          
+            return View();
+        }
+        public ActionResult LoadChapterList()
+        {
+            List<Chapter> chapterList = new List<Chapter>();
+            List<ChapterContent> cpList = new List<ChapterContent>();
+            chapterList = _Util.Facade.ChapterFacade.GetAllChapterName();
+            cpList = _Util.Facade.ChapterContentFacade.GetAllChapterName();
+            BookChapter bk = new BookChapter();
+            bk.ChapterList = chapterList;
+            bk.ContentList = cpList;
+            return View(bk);
+        }
+        public ActionResult ChapterLIst()
+        {
+            return View(_Util.Facade.ChapterContentFacade.GetAllChapterName());
+        }
+
+     
+   
+        public JsonResult SaveChapter(Chapter chapter)
+        {
+            bool result = false;
+            try
+            {
+                if (chapter.Id > 0)
+                {
+                    _Util.Facade.ChapterFacade.UpdateChapter(chapter);
+
+                }
+                else
+                {
+                    _Util.Facade.ChapterFacade.InsertChapter(chapter);
+                }
+                result = true;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            // return RedirectToAction("Dashboard");
+            return Json(result);
+
+        }
+
+
+        public JsonResult SaveContent(ChapterContent Content)
+        {
+            bool result = false;
+            try
+            {
+                if (Content.Id > 0)
+                {
+                    _Util.Facade.ChapterContentFacade.UpdateChapter(Content);
+
+                }
+                else
+                {
+                    _Util.Facade.ChapterContentFacade.InsertChapter(Content);
+                }
+                result = true;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            // return RedirectToAction("Dashboard");
+            return Json(result);
+          
+
+
+         
+        }
+        public ActionResult ChpterContent()
+        {
+
+            return View();
+        }
+
+     
+
+
+        [HttpGet]
+        public ActionResult CreateChapter(int? id)
+        {
+       
+
+            Chapter chapter = new Chapter();
+            if(id.HasValue && id > 0)
+            {
+                //Get data using id
+                chapter = _Util.Facade.ChapterFacade.GetChapterById(id.Value);
+            }
+            return View(chapter);
+        }
+
+        public ActionResult CreateCpContent(int? id)
+        {
+
+            List<SelectListItem> cpList = new List<SelectListItem>();
+            foreach (Chapter cp in _Util.Facade.ChapterFacade.GetAllChapterName())
+            {
+                SelectListItem option = new SelectListItem();
+                option.Text = cp.Name;
+                option.Value = cp.Id.ToString();
+
+                cpList.Add(option);
+            }
+
+            // sending the list to view through ViewBag
+            ViewBag.contents = cpList;
+            ChapterContent content = new ChapterContent();
+            if (id.HasValue && id > 0)
+            {
+                //Get data using id
+                content = _Util.Facade.ChapterContentFacade.GetChapterById(id.Value);
+            }
+            return View(content);
+        }
+      
+        public ActionResult Product()
+        {
+            return View();
+        }
+        [HttpGet]
+        public ActionResult EmployeeProfile()
+        {
+            Employee em;
+            em = _Util.Facade.EmployeeFacade.GetEmployeeById(5);
+            return View(em);
+        }
+ 
+        public JsonResult EmployeeProfile(Employee employee)
+        {
+            bool result = false;
+            try
+            {
+                _Util.Facade.EmployeeFacade.UpdateEmployee(employee);
+                result = true;
+            }
+            catch(Exception ex)
+            {
+
+            }
+           // return RedirectToAction("Dashboard");
+           return Json(result);
+        }
+        public ActionResult ShowChapterList()
+        {
+            return View(_Util.Facade.ChapterFacade.GetAllChapterName());
+        }
+
+        public ActionResult ShowContentLIst()
+        {
+            return View(_Util.Facade.ChapterContentFacade.GetAllChapterName());
+        }
+
+    }
+}

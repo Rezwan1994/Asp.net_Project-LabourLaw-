@@ -1,0 +1,235 @@
+﻿
+@model LLP.Web.BookChapter
+
+
+@{
+
+    Layout = null;
+}
+<html>
+<head>
+    <title></title>
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        /*Here We will add some css for style our treeview*/
+        .collapse {
+            width: 15px;
+            background-image: url('../../Content/images/treeview.png');
+            background-repeat: no-repeat;
+            background-position: -36px -17px;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .expand {
+            width: 15px;
+            background-image: url('../../Content/images/treeview.png');
+            background-repeat: no-repeat;
+            background-position: -50px -17px;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .treeview ul {
+            font: 14px Arial, Sans-Serif;
+            margin: 0px;
+            padding-left: 20px;
+            list-style: none;
+        }
+
+        .treeview > li > a {
+            font-weight: bold;
+        }
+
+        .treeview li {
+        }
+
+            .treeview li a {
+                padding: 4px;
+                font-size: 12px;
+                display: inline-block;
+                text-decoration: none;
+                width: auto;
+            }
+
+        .Chapter_List {
+            border-right: 1px solid #808080;
+        }
+
+        .header {
+            background-color: lightblue;
+            text-align: center;
+            height:80px;
+        }
+        #search {
+            margin-top: 15px;
+        }
+        #btnsearch {
+            margin-left: 550px;
+        }
+        .head {
+            color: white;
+        }
+        .Chapter {
+            text-align: center;
+            
+        }
+        #txtChapt {
+            text-align: left;
+        }
+        #txtChaptername {
+            text-align: left;
+        }
+        .forborder {
+            /*border-style: groove;*/
+            background-color: lightgray;
+            width: 500px;
+            margin-left: 150px;
+        }
+    </style>
+</head>
+<body>
+
+
+    <!--/.header-->
+    <div class="Chapter">
+        @*<div class="container">*@
+            <div class="header ">
+                <h3>
+                    <input type="text" id="search" placeholder="Search In your book..">
+                    <input type="submit" id=" Searchbutton" value="Search" class="btn btn-danger" >
+                </h3>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+
+                    <div class="Chapter_List">
+                        <h2>Chapters</h2>
+                        <div style="padding:10px; background-color:#FAFAFA">
+                            <div class="treeview">
+                                @foreach (var a in Model.ChapterList)
+                                {
+                                    <h4 id="txtChapt">@a.Name</h4>
+
+                                    if (Model.ContentList != null && Model.ContentList.Count() > 0)
+                                    {
+
+                                        <ul class="ChapterName" id="txtChaptername">
+                                            @TreeView.GetTreeView(Model.ContentList, Model.ContentList.FirstOrDefault().ParentId, Convert.ToInt32(a.ChapterNo))
+
+                                        </ul>
+                                    }
+
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="Chapter_Content" id="cpcontent">
+
+
+                    </div>
+                    <div id="searchSuggestion" class="suggestion" >
+
+                    </div>
+                </div>
+            </div>
+        @*</div>*@
+    </div>
+
+    <script src="~/Content/scripts/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(".treeview li>ul").css('display', 'none'); // Hide all 2-level ul
+            $(".collapsible").click(function (e) {
+                e.preventDefault();
+                $(this).toggleClass("collapse expand");
+                $(this).closest('li').children('ul').slideToggle();
+            });
+        });
+
+
+
+        $(document).ready(function () {
+            $(".title").click(function (item) {
+                var clickitem = $(item.target).attr('data-location');
+                $(".Chapter_Content").load(clickitem);
+            })
+        });
+
+
+
+
+        $(document).ready(function () {
+            $(".ContentTitle").click(function (item) {
+                var clickitem1 = $(item.target).attr('data-location');
+
+                $(".Chapter_Content").load(clickitem1);
+            })
+        });
+
+
+
+
+
+
+
+        $(document).ready(function () {
+            $("input").keyup(function () {
+
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("SearchInbook", "Home")',
+                dataType: "json",
+                data: { search: $("#search").val() },
+                success: function (data) {
+                   $('#cpcontent').html("");
+                    //'<br>';
+                   // console.log(data);
+                    var suggestionlist = '';
+
+                    for (var sterm = 0; sterm < data.length; sterm++) {
+
+                        var item = data[sterm];
+                        suggestionlist += ('<a class="chapter" data-location="/Home/ShowContentbyTitle?Title=' + encodeURIComponent(item)+'" onclick="myFunction(this)" item="' + item + '" >' + data[sterm] + '</a><br>');
+                       // suggestionlist += ('<a class="ContentTitle" onclick="LinkAssign(this)" item="' + gurl+'" >' + data[sterm]+ '</a> <br>');
+
+                    }
+                    $('#searchSuggestion').html('<div class="forborder">' + suggestionlist +'</div>');
+
+                },
+                error: function (xhr, status, error) {
+                    alert("Error");
+                }
+            });
+
+
+            })
+
+
+    });
+
+        var myFunction = function (item) {
+            //var clickitem1 = $(item.target).attr('data-location');data-location='+gurl+'
+            //  encodeURIComponent(_href))
+            var value = $(item).attr("item");
+            var clickitem = $(item).attr('data-location');
+           // alert(clickitem);
+            $('#searchSuggestion').html("");
+            $(".Chapter_Content").load(clickitem);
+           // alert(value);
+            //$(".Chapter_Content").load(clickitem1);
+             // data - location="/Home/ShowContentbyTitle?Title=value";
+
+        }
+      //
+
+    </script>
+
+    @* Here We need some Jquery code for make this treeview collapsible *@
+
+</body>
+</html>

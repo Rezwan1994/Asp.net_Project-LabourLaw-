@@ -1,0 +1,179 @@
+﻿@model LLP.Entities.Chapter
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CreateChapter</title>
+
+    <link href="~/Content/css/pnotify.css" rel="stylesheet" />
+
+    <link href="~/Content/css/pnotify.buttons.css" rel="stylesheet" />
+
+    <link href="~/Content/css/pnotify.nonblock.css" rel="stylesheet" />
+    <script src="~/Content/scripts/jquery.min.js"></script>
+    <script src="~/Content/tinymce/tinymce.min.js"></script>
+    <script src="~/Content/tinymce/init-tinymce.js"></script>
+    <script src="~/Content/scripts/pnotify.js"></script>
+    <script src="~/Content/scripts/pnotify.nonblock.js"></script>
+    <script src="~/Content/scripts/pnotify.buttons.js"></script>
+    <script src="~/Content/scripts/Validation.js"></script>
+    <script>
+        var scrollToErrorMessagePublic = function () {
+            if ($($(".required").get(0)).offset() != undefined) {
+                var topcal = $($(".required").get(0)).offset().top;
+                if (topcal == 0) {
+                    topcal = $($(".required").get(0)).position().top;
+                    topcal -= 40;
+                } else {
+                    topcal -= 180;
+                }
+                jQuery('html, body').animate({
+                    scrollTop: topcal
+                }, 1000);
+            }
+        }
+        
+        $(document).ready(function () {
+
+            $('#btnSaveChapter').click(function () {
+                if (CommonUiValidation()) {
+                    var chapter = {};
+                    chapter.Id = $("#Id").val();
+                    chapter.ChapterNo = $("#txtChapterNo").val();
+                    chapter.Name = $("#txtName").val();
+                    chapter.Type = $("#txtType").val();
+
+                    var content = tinymce.get("txtDescription").getContent();
+
+
+
+                    chapter.Description = content;
+
+
+                    $.ajax({
+
+                        type: "POST",
+                        url: "/Admin/SaveChapter",
+                        data: '{chapter: ' + JSON.stringify(chapter) + '}',
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            if (response == true) {
+                                $("#txtChapterNo").val('');
+                                $("#txtName").val('');
+                                $("#txtType").val('');
+                                $("#txtDescription").val('');
+                                new PNotify({
+                                    title: 'Saved Successfully',
+                                    text: 'The Content is saved...',
+                                    type: 'success',
+                                    styling: 'bootstrap3'
+                                });
+
+
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Saved Successfully',
+                                    text: 'The Content is saved...',
+                                    type: 'error',
+                                    styling: 'bootstrap3'
+                                });
+
+                            }
+
+
+                            //window.location.reload();
+                        }
+                    });
+                }
+                else {
+                    scrollToErrorMessagePublic();
+                }
+        });
+
+        });
+    </script>
+</head>
+<body>
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Chapter Content<small>Contents of chapters</small></h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li>
+                                <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                            
+                            <li>
+                                <a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <br />
+                        <div data-parsley-validate class="form-horizontal form-label-left">
+                      
+                             
+                             
+                                 @Html.HiddenFor(m=>m.Id)
+                        
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" >
+                                    Chapter No <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="txtChapterNo" value="@Model.ChapterNo" required="required" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" >
+                                    Name <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="txtName" value="@Model.Name" required="required" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label  class="control-label col-md-3 col-sm-3 col-xs-12">Type</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input id="txtType" value="Rule"   class="form-control col-md-7 col-xs-12" type="text" name="middle-name">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Description</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <textarea  id="txtDescription"  class="tinymce">@Model.Description</textarea>
+                                </div>
+                              
+                            </div>
+                           
+                            <div class="ln_solid"></div>
+                            <div class="form-group">
+                                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                    <button class="btn btn-primary" type="button">Cancel</button>
+                                    <button class="btn btn-primary" type="reset">Reset</button>
+                                    <button id="btnSaveChapter" class="btn btn-success ">
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>
+<script src="~/Content/scripts/custom.min.js"></script>

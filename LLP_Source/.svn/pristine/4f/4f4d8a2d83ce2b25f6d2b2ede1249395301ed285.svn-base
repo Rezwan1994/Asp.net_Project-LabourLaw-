@@ -1,0 +1,291 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+
+namespace LLP.Framework
+{
+    public static class Extentions
+    {
+
+        public static string ToDateTimeText(this DateTime? datetime)
+        {
+            if (datetime.HasValue)
+            {
+                return datetime.Value.ToString("MM/dd/yyyy hh:mm tt");
+            }
+            else
+            {
+                return "-";
+            }
+        }
+        public static string ToStringDataRow(this DataRow dr, string column)
+        {
+            return dr[column].ToString();
+        }
+
+        public static int ToIntDataRow(this DataRow dr, string column)
+        {
+            return dr[column] != DBNull.Value? Convert.ToInt32(dr[column].ToString()): -1 ;
+        }
+        public static string ToDateText(this DateTime? datetime)
+        {
+            if (datetime.HasValue)
+            {
+                return datetime.Value.ToString("MM/dd/yyyy");
+            }
+            else
+            {
+                return "-";
+            }
+        }
+        public static string ToTimeText(this DateTime? datetime)
+        {
+            if (datetime.HasValue)
+            {
+                return datetime.Value.ToString("hh:mm tt");
+            }
+            else
+            {
+                return "-";
+            }
+        }
+        public static string UppercaseFirst(this string s)
+        {
+            // Check for empty string.
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+            s = s.ToLower();
+            // Return char and concat substring.
+            return char.ToUpper(s[0]) + s.Substring(1);
+        }
+        public static DateTime UTCCurrentTime(this DateTime datetime)
+        {
+            datetime = DateTime.UtcNow;
+            return datetime;
+        }
+        public static string ReplaceSpecialChar(this string value,string newvalue="-")
+        {
+            if (value == null)
+                return "";
+            return Regex.Replace(value, @"[^0-9a-zA-Z]+", newvalue);
+        }
+        public static string ReplaceSpecialCharForPropertySearch(this string value, string newvalue = "-")
+        {
+            return Regex.Replace(value, @"[^0-9a-zA-Z()]+", newvalue);
+        }
+        public static string ReplaceWithMalyasia(this string value)
+        {
+            return Regex.Replace(value, "Malaysia", "");
+        }
+        public static string ReplaceSpecialCharWithSingleQuote(this string value, string newvalue = "-")
+        {
+            return Regex.Replace(value, @"'[^0-9a-zA-Z]+", newvalue);
+        }
+        public static string ToDateToListString(this DateTime? value)
+        {
+            return value.HasValue ? "Added On : " + value.Value.ToString("MMM dd") : string.Empty;
+        }
+        public static List<T> ConvertToList<T>(this DataTable dt)
+        {
+            var columnNames = dt.Columns.Cast<DataColumn>()
+                .Select(c => c.ColumnName)
+                .ToList();
+
+            var properties = typeof(T).GetProperties();
+
+            return dt.AsEnumerable().Select(row =>
+            {
+                var objT = Activator.CreateInstance<T>();
+
+                foreach (var pro in properties)
+                {
+                    if (columnNames.Contains(pro.Name) && row[pro.Name] != DBNull.Value)
+                        pro.SetValue(objT, row[pro.Name]);
+                   
+                }
+
+                return objT;
+            }).ToList();
+
+        }
+        public static List<T> GetListModel<T>(this DataTable dt)
+        {
+            List<T> lst = new List<T>();
+            foreach (DataRow dw in dt.Rows)
+            {
+                Type Tp = typeof(T);
+                //create instance of the type
+                T obj = Activator.CreateInstance<T>();
+                //fetch all properties
+                PropertyInfo[] pf = Tp.GetProperties();
+                foreach (PropertyInfo pinfo in pf)
+                {
+                    ///read the implimeted custome atribute for a property
+                    object[] colname = pinfo.GetCustomAttributes(typeof(DataTableColName), false);
+                    if (colname == null) continue;
+                    if (colname.Length == 0) continue;
+                    ///read column name from that atribute object
+                    string col = (colname[0] as DataTableColName).CoulumnName;
+                    if (!dt.Columns.Contains(col)) continue;
+                    if (dw[col] == null) continue;
+                    if (dw[col] == DBNull.Value) continue;
+                    ///set property value
+                    pinfo.SetValue(obj, dw[col], null);
+                }
+                lst.Add(obj);
+            }
+            return lst;
+        }
+
+        public static List<T> DataTableToList<T>(this DataTable table) where T : class, new()
+        {
+            try
+            {
+                List<T> list = new List<T>();
+
+                foreach (var row in table.AsEnumerable())
+                {
+                    T obj = new T();
+
+                    foreach (var prop in obj.GetType().GetProperties())
+                    {
+                        try
+                        {
+                            PropertyInfo propertyInfo = obj.GetType().GetProperties().Where(p => p.Name == prop.Name).SingleOrDefault(); 
+                            //obj.GetType().GetProperty(prop.Name);
+                            //propertyInfo.SetValue(obj, Convert.ChangeType(row[prop.Name], propertyInfo.PropertyType), null);
+                            if (propertyInfo != null)
+                            {
+                                Type t = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
+
+                                object safeValue = (row[prop.Name] == null) ? null : Convert.ChangeType(row[prop.Name], t);
+
+                                propertyInfo.SetValue(obj, safeValue, null);
+                            }
+                        }
+                        catch(Exception ex)
+                        {
+                            continue;
+                        }
+                    }
+
+                    list.Add(obj);
+                }
+
+                return list;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static List<T> ToList<T>(this DataTable datatable) where T : new()
+        {
+            List<T> Temp = new List<T>();
+            try
+            {
+                List<string> columnsNames = new List<string>();
+                foreach (DataColumn DataColumn in datatable.Columns)
+                    columnsNames.Add(DataColumn.ColumnName);
+                Temp = datatable.AsEnumerable().ToList().ConvertAll<T>(row => ToModel<T>(row, columnsNames));
+                return Temp;
+            }
+            catch { return Temp; }
+        }
+        public static T ToModel<T>(DataRow row, List<string> columnsName) where T : new()
+        {
+            T obj = new T();
+            try
+            {
+                string columnname = "";
+                string value = "";
+                PropertyInfo[] Properties; Properties = typeof(T).GetProperties();
+                foreach (PropertyInfo objProperty in Properties)
+                {
+                    columnname = columnsName.Find(name => name.ToLower() == objProperty.Name.ToLower());
+                    if (!string.IsNullOrEmpty(columnname))
+                    {
+                        value = row[columnname].ToString();
+                        if (!string.IsNullOrEmpty(value))
+                        {
+                            if (Nullable.GetUnderlyingType(objProperty.PropertyType) != null)
+                            {
+                                value = row[columnname].ToString().Replace("$", "").Replace(",", "");
+                                objProperty.SetValue(obj, Convert.ChangeType(value, Type.GetType(Nullable.GetUnderlyingType(objProperty.PropertyType).ToString())), null);
+                            }
+                            else
+                            {
+                                value = row[columnname].ToString().Replace("%", "");
+                                objProperty.SetValue(obj, Convert.ChangeType(value, Type.GetType(objProperty.PropertyType.ToString())), null);
+                            }
+                        }
+                    }
+                } return obj;
+            }
+            catch { return obj; }
+        }
+        public static float ToFloat(this string value)
+        {
+            float result = 0;
+            float.TryParse(value, out result);
+            return result;
+        }
+        public static int ToInt(this string value)
+        {
+            int result = 0;
+            int.TryParse(value, out result);
+            return result;
+        }
+        public static decimal ToDecimal(this string value)
+        {
+            decimal result = 0;
+            decimal.TryParse(value, out result);
+            return result;
+        }
+        public static DataTable ToDataTable<T>(List<T> items)
+        {
+            DataTable dataTable = new DataTable(typeof(T).Name);
+
+            //Get all the properties
+            PropertyInfo[] Props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (PropertyInfo prop in Props)
+            {
+                //Setting column names as Property names
+                dataTable.Columns.Add(prop.Name);
+            }
+            foreach (T item in items)
+            {
+                var values = new object[Props.Length];
+                for (int i = 0; i < Props.Length; i++)
+                {
+                    //inserting property values to datatable rows
+                    values[i] = Props[i].GetValue(item, null);
+                }
+                dataTable.Rows.Add(values);
+            }
+            //put a breakpoint here and check datatable
+            return dataTable;
+        }
+    }
+    public class DataTableColName : Attribute
+    {
+        string coulumnName = string.Empty;
+        public string CoulumnName
+        {
+            get { return coulumnName; }
+            set { coulumnName = value; }
+        }
+        public DataTableColName(string colName)
+        {
+            coulumnName = colName;
+        }
+    }
+}

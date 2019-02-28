@@ -1,0 +1,245 @@
+﻿using System;
+using System.Data;
+using System.Data.SqlClient;
+using LLP.Framework;
+using LLP.Framework.Exceptions;
+using LLP.Entities;
+using System.Linq;
+using LLP.Entities.Bases;
+using LLP.Entities.List;
+using System.Collections.Generic;
+
+namespace LLP.DataAccess
+{
+	public partial class ChapterContentDataAccess
+	{
+        public List<ChapterContent> GetContentName(string SearchText)
+        {
+
+            List<ChapterContent> content = new List<ChapterContent>();
+            string SqlQuery = @"SELECT * FROM ChapterContent";
+            if (!string.IsNullOrWhiteSpace(SearchText))
+            {
+                SqlQuery += "  WHERE Title LIKE '%{0}%'";
+            }
+            using (SqlCommand cmd = GetSQLCommand(string.Format(SqlQuery,SearchText)))
+            {
+                DataSet dsResult = GetDataSet(cmd);
+                DataTable dt = dsResult.Tables[0];
+              
+                try
+                {
+                    
+                    content = (from DataRow dr in dt.Rows 
+                                  select new ChapterContent()
+                                  {
+                                        Title = dr.ToStringDataRow("Title"),
+                                        ChapterId = dr.ToIntDataRow("ChapterId"),
+                                        CpContent = dr.ToStringDataRow("CpContent"),
+                                        Id = dr.ToIntDataRow("Id"),
+                                        TitleNo = dr.ToStringDataRow("TitleNo"),
+                                        ParentId = dr.ToIntDataRow("ParentId")
+            
+                                  }).ToList();
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+                return content;
+            }
+    
+            
+        }
+        
+        public List<ChapterContent> GetAllChapterContent( int PageNumber, int UnitPerPage, string SearchText)
+        {
+            string searchTextQuery = "";
+
+            if (!string.IsNullOrWhiteSpace(SearchText))
+            {
+                searchTextQuery = " Title like '%" + SearchText + "%'";
+            }
+
+            List<ChapterContent> content = new List<ChapterContent>();
+            string rawQuery = @"  
+                                declare @pagesize int
+                                declare @pageno int 
+                                set @pagesize = " + UnitPerPage + @"
+                                set @pageno = " + PageNumber + @"
+                                declare @pagestart int
+                                set @pagestart=(@pageno-1)* @pagesize  
+                                select  TOP (@pagesize) * FROM ChapterContent as cp
+                                INNER JOIN Chapter as ch ON cp.ChapterId = ch.ChapterNo where ch.Type in (select Type from Chapter where Type ='Rule') AND
+                                Title like'%" + SearchText + @"%' AND cp.Id NOT IN(Select TOP (@pagestart) Id from ChapterContent)
+                                 select Count(Id) As TotalCount from ChapterContent";
+                                
+                              
+
+
+            using (SqlCommand cmd = GetSQLCommand(rawQuery))
+            {
+                DataSet dsResult = GetDataSet(cmd);
+                DataTable dt = dsResult.Tables[0];
+                try
+                {
+                    content = (from DataRow dr in dt.Rows
+                               select new ChapterContent()
+                               {
+                                   Title = dr.ToStringDataRow("Title"),
+                                   ChapterId = dr.ToIntDataRow("ChapterId"),
+                                   CpContent = dr.ToStringDataRow("CpContent"),
+                                   Id = dr.ToIntDataRow("Id"),
+                                   TitleNo = dr.ToStringDataRow("TitleNo"),
+                                   ParentId = dr.ToIntDataRow("ParentId")
+
+                               }).ToList();
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
+            return content;
+        }
+        public List<ChapterContent> GetAllChapterContent2(int PageNumber, int UnitPerPage, string SearchText)
+        {
+            string searchTextQuery = "";
+
+            if (!string.IsNullOrWhiteSpace(SearchText))
+            {
+                searchTextQuery = " Title like '%" + SearchText + "%'";
+            }
+
+            List<ChapterContent> content = new List<ChapterContent>();
+            string rawQuery = @"   declare @pagesize int
+                                    declare @SearchText nvarchar(50)
+	                                declare @pageno int
+                                  
+                                    set @pagesize = " + UnitPerPage + @"
+
+                                    set @pageno = " + PageNumber + @"
+
+                                    declare @pagestart int
+                                    set @pagestart = (@pageno - 1) * @pagesize
+
+                                    select TOP(@pagesize) cp.* FROM ChapterContent cp
+
+                                    left JOIN Chapter as ch
+
+                                    ON cp.ChapterId = ch.ChapterNo
+
+
+                                    where ch.Type = 'Act'
+
+                                    AND cp.Title like '%" + SearchText + @"%'
+                                    AND cp.Id NOT IN(Select TOP(@pagestart) cp.Id from ChapterContent cp left JOIN Chapter as ch
+
+                                    ON cp.ChapterId = ch.ChapterNo  where cp.Title like '%" + SearchText + @"%' and ch.Type = 'Act')
+
+                                    order by id asc";
+
+
+
+
+            using (SqlCommand cmd = GetSQLCommand(rawQuery))
+            {
+                DataSet dsResult = GetDataSet(cmd);
+                DataTable dt = dsResult.Tables[0];
+                try
+                {
+                    content = (from DataRow dr in dt.Rows
+                               select new ChapterContent()
+                               {
+                                   Title = dr.ToStringDataRow("Title"),
+                                   ChapterId = dr.ToIntDataRow("ChapterId"),
+                                   CpContent = dr.ToStringDataRow("CpContent"),
+                                   Id = dr.ToIntDataRow("Id"),
+                                   TitleNo = dr.ToStringDataRow("TitleNo"),
+                                   ParentId = dr.ToIntDataRow("ParentId")
+
+                               }).ToList();
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
+            return content;
+        }
+
+        public List<ChapterContent> GetContentCountAct()
+        {
+            List<ChapterContent> content = new List<ChapterContent>();
+            string rawQuery = @"  
+                                
+                                select * FROM ChapterContent as cp
+                                INNER JOIN Chapter as ch ON cp.ChapterId = ch.ChapterNo where ch.Type in (select Type from Chapter where Type ='Act')";
+
+
+
+
+            using (SqlCommand cmd = GetSQLCommand(rawQuery))
+            {
+                DataSet dsResult = GetDataSet(cmd);
+                DataTable dt = dsResult.Tables[0];
+                try
+                {
+                    content = (from DataRow dr in dt.Rows
+                               select new ChapterContent()
+                               {
+                                   Title = dr.ToStringDataRow("Title"),
+                                   ChapterId = dr.ToIntDataRow("ChapterId"),
+                                   CpContent = dr.ToStringDataRow("CpContent"),
+                                   Id = dr.ToIntDataRow("Id"),
+                                   TitleNo = dr.ToStringDataRow("TitleNo"),
+                                   ParentId = dr.ToIntDataRow("ParentId")
+
+                               }).ToList();
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
+            return content;
+        }
+
+        public List<ChapterContent> GetContentCountRule()
+        {
+            List<ChapterContent> content = new List<ChapterContent>();
+            string rawQuery = @"  
+                                
+                                select * FROM ChapterContent as cp
+                                INNER JOIN Chapter as ch ON cp.ChapterId = ch.ChapterNo where ch.Type in (select Type from Chapter where Type ='Rule')";
+
+
+
+
+            using (SqlCommand cmd = GetSQLCommand(rawQuery))
+            {
+                DataSet dsResult = GetDataSet(cmd);
+                DataTable dt = dsResult.Tables[0];
+                try
+                {
+                    content = (from DataRow dr in dt.Rows
+                               select new ChapterContent()
+                               {
+                                   Title = dr.ToStringDataRow("Title"),
+                                   ChapterId = dr.ToIntDataRow("ChapterId"),
+                                   CpContent = dr.ToStringDataRow("CpContent"),
+                                   Id = dr.ToIntDataRow("Id"),
+                                   TitleNo = dr.ToStringDataRow("TitleNo"),
+                                   ParentId = dr.ToIntDataRow("ParentId")
+
+                               }).ToList();
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
+            return content;
+        }
+    }	
+}

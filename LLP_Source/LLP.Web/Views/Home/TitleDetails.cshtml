@@ -1,0 +1,27 @@
+﻿
+@model List<LLP.Entities.ChapterContent>
+@using Localize = LLP.Web.Ui.Helper.LanguageHelper
+@{
+    ViewBag.Title = "TitleDetails";
+    Layout = "~/Views/Shared/_llpLayout.cshtml";
+}
+<div class="title_details">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                @{
+                    foreach (var i in Model)
+                    {
+                        <p>@Html.Raw(@Localize.T( i.CpContent))</p>
+
+                    }
+                }
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+
+    </div>
+</div>
+
+

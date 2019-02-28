@@ -1,0 +1,27 @@
+﻿using LLP.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace LLP.Web.Controllers
+{
+    public class ChatHubController : BaseController
+    {
+        // GET: ChatHub
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        //public ChatUser GetId(string email)
+        //{
+        //    return _Util.Facade.chatFacade.getbyEmail(email);
+        //}
+        public bool InsertUser(ChatUser chatUser)
+        {
+            return _Util.Facade.chatFacade.InsertChatUser(chatUser);
+        }
+    }
+}

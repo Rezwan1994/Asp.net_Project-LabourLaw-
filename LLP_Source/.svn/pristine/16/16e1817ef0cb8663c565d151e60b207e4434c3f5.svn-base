@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Top Navigation Bar</title>
+    <link href="~/Content/css/topnavbarcss.css" rel="stylesheet" />
+    <link href="~/Content/css/DropdownSidemenuBar.css" rel="stylesheet" />
+
+</head>
+
+<body>
+    <div class="mother">
+
+
+        <div class="topnav">
+
+            <img src="~/Content/Image/qw.jpg"  height="80px" width="249px"/>
+
+            <ul class="top-nav-ul">
+
+                <li><a href="">Mr X</a></li>
+                <li><a href="">Log Out</a></li>
+                <li><a href="">Public Strore</a></li>
+                <li><a href="">Settings</a></li>
+
+            </ul>
+
+        </div>
+
+        <div class="nav">
+            <div class="main-nav">
+
+
+
+                <ul class="main-nav-ul">
+
+                    <li>
+                        <a href="http://localhost:36086/Admin/Index">Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="">Catalog<span></span></a>
+                        <ul>
+                            <li><a href="http://localhost:36086/Admin/Product">Product</a></li>
+                            <li><a href="">Item1</a></li>
+                            <li><a href="">Item1</a></li>
+                            <li><a href="">Item1</a></li>
+                            <li><a href="">Item1</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="">Selles<span></span></a>
+
+                        <ul>
+                            <li><a href="http://localhost:36086/Admin/Sells">Order</a></li>
+                            <li><a href="http://localhost:36086/Admin/Catagory">Catagory</a></li>
+                            <li><a href="http://localhost:36086/Admin/Shipment">Shipment</a></li>
+                            <li><a href="">Item4</a></li>
+                            <li><a href="">Item5</a></li>
+                            <li><a href="">Item6</a></li>
+                            <li><a href="">Item7</a></li>
+                            <li><a href="">Item8</a></li>
+                            <li><a href="">Item9</a></li>
+                            <li><a href="">Item10</a></li>
+                        </ul>
+                    </li>
+
+
+                    <li>
+                        <a href="">Management<span></span></a>
+                        <ul>
+                            <li><a href="">Item1</a></li>
+                            <li><a href="">Item1</a></li>
+                            <li><a href="">Item1</a></li>
+                            <li><a href="">Item1</a></li>
+                            <li><a href="">Item1</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="">Content<span></span></a>
+                        <ul>
+                            <li><a href="">Item1</a></li>
+                            <li><a href="">Item1</a></li>
+                            <li><a href="">Item1</a></li>
+                            <li><a href="">Item1</a></li>
+                            <li><a href="">Item1</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="">Campaign<span></span></a>
+                        <ul>
+                            <li><a href="">Item1</a></li>
+                            <li><a href="">Item1</a></li>
+                            <li><a href="">Item1</a></li>
+                            <li><a href="">Item1</a></li>
+                            <li><a href="">Item1</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="">Customer<span></span></a>
+                        <ul>
+                            <li><a href="">Item1</a></li>
+                            <li><a href="">Item1</a></li>
+                            <li><a href="">Item1</a></li>
+                            <li><a href="">Item1</a></li>
+                            <li><a href="">Item1</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="">Configuration</a></li>
+
+                </ul>
+
+            </div>
+
+            <div class="content">
+               @RenderBody()
+            </div>
+        </div>
+
+
+
+
+    </div>
+</body>
+
+</html>

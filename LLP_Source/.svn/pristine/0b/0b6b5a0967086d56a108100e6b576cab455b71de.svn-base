@@ -1,0 +1,30 @@
+﻿
+
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+ 
+}
+
+<script language='javascript' type='text/javascript'>
+    var dataexists = @ViewBag.Javascript;
+    if(dataexists)
+    {
+         alert('Data Already Exists');
+    }
+           
+        
+  
+</script>
+    <!--/.header-->
+<div class="Content">
+    <h2>Dashboard</h2>
+</div>
+
+@* Here We need some Jquery code for make this treeview collapsible *@
+
+
+
+
+
+

@@ -1,0 +1,522 @@
+﻿USE llpdb
+GO
+
+/****** Object:  StoredProcedure [dbo]..InsertEmployee    Script Date: 3/28/2018 2:04:40 PM ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[InsertEmployee]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[InsertEmployee]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE InsertEmployee
+(
+	@Id int OUTPUT,
+	@EmployeeId uniqueidentifier,
+	@UserId uniqueidentifier,
+	@Title nvarchar(50),
+	@FirstName nvarchar(250),
+	@LastName nvarchar(250),
+	@Email nvarchar(50),
+	@Street nvarchar(500),
+	@City nvarchar(50),
+	@State nvarchar(50),
+	@ZipCode nvarchar(50),
+	@Country nvarchar(50),
+	@Phone nvarchar(50),
+	@SSN nvarchar(50),
+	@IsActive bit,
+	@IsDeleted bit,
+	@IsInstaller bit,
+	@IsSalesPerson bit,
+	@IsServiceCall bit,
+	@HireDate datetime,
+	@ProfilePicture nvarchar(250),
+	@Session nvarchar(50),
+	@JobTitle nvarchar(100),
+	@PlaceOfBirth nvarchar(100),
+	@SalesCommissionStructure nvarchar(100),
+	@TechCommissionStructure nvarchar(100),
+	@RecruitmentProcess bit,
+	@Recruited bit,
+	@CreatedDate datetime,
+	@Status nvarchar(50),
+	@LastUpdatedBy nvarchar(250),
+	@LastUpdatedDate datetime
+)
+AS
+    INSERT INTO [dbo].[Employee] 
+	(
+	[EmployeeId],
+	[UserId],
+	[Title],
+	[FirstName],
+	[LastName],
+	[Email],
+	[Street],
+	[City],
+	[State],
+	[ZipCode],
+	[Country],
+	[Phone],
+	[SSN],
+	[IsActive],
+	[IsDeleted],
+	[IsInstaller],
+	[IsSalesPerson],
+	[IsServiceCall],
+	[HireDate],
+	[ProfilePicture],
+	[Session],
+	[JobTitle],
+	[PlaceOfBirth],
+	[SalesCommissionStructure],
+	[TechCommissionStructure],
+	[RecruitmentProcess],
+	[Recruited],
+	[CreatedDate],
+	[Status],
+	[LastUpdatedBy],
+	[LastUpdatedDate]
+    ) 
+	VALUES 
+	(
+	@EmployeeId,
+	@UserId,
+	@Title,
+	@FirstName,
+	@LastName,
+	@Email,
+	@Street,
+	@City,
+	@State,
+	@ZipCode,
+	@Country,
+	@Phone,
+	@SSN,
+	@IsActive,
+	@IsDeleted,
+	@IsInstaller,
+	@IsSalesPerson,
+	@IsServiceCall,
+	@HireDate,
+	@ProfilePicture,
+	@Session,
+	@JobTitle,
+	@PlaceOfBirth,
+	@SalesCommissionStructure,
+	@TechCommissionStructure,
+	@RecruitmentProcess,
+	@Recruited,
+	@CreatedDate,
+	@Status,
+	@LastUpdatedBy,
+	@LastUpdatedDate
+    )
+	DECLARE @Err int
+	DECLARE @Result int
+
+	SET @Result = @@ROWCOUNT
+	SET @Err = @@ERROR 
+	If @Err <> 0 
+	BEGIN
+		SET @Id = -1
+		RETURN @Err
+	END
+	ELSE
+	BEGIN
+		If @Result = 1 
+		BEGIN
+			-- Everything is OK
+			SET @Id = @@IDENTITY
+		END
+		ELSE
+		BEGIN
+			SET @Id = -1
+			RETURN 0
+		END
+	END
+
+	RETURN @Id
+GO
+
+/****** Object:  StoredProcedure [dbo].UpdateEmployee    Script Date: 3/28/2018 2:04:40 PM ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UpdateEmployee]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[UpdateEmployee]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE UpdateEmployee
+(
+	@Id int,
+	@EmployeeId uniqueidentifier,
+	@UserId uniqueidentifier,
+	@Title nvarchar(50),
+	@FirstName nvarchar(250),
+	@LastName nvarchar(250),
+	@Email nvarchar(50),
+	@Street nvarchar(500),
+	@City nvarchar(50),
+	@State nvarchar(50),
+	@ZipCode nvarchar(50),
+	@Country nvarchar(50),
+	@Phone nvarchar(50),
+	@SSN nvarchar(50),
+	@IsActive bit,
+	@IsDeleted bit,
+	@IsInstaller bit,
+	@IsSalesPerson bit,
+	@IsServiceCall bit,
+	@HireDate datetime,
+	@ProfilePicture nvarchar(250),
+	@Session nvarchar(50),
+	@JobTitle nvarchar(100),
+	@PlaceOfBirth nvarchar(100),
+	@SalesCommissionStructure nvarchar(100),
+	@TechCommissionStructure nvarchar(100),
+	@RecruitmentProcess bit,
+	@Recruited bit,
+	@CreatedDate datetime,
+	@Status nvarchar(50),
+	@LastUpdatedBy nvarchar(250),
+	@LastUpdatedDate datetime
+)
+AS
+    UPDATE [dbo].[Employee] 
+	SET
+	[EmployeeId] = @EmployeeId,
+	[UserId] = @UserId,
+	[Title] = @Title,
+	[FirstName] = @FirstName,
+	[LastName] = @LastName,
+	[Email] = @Email,
+	[Street] = @Street,
+	[City] = @City,
+	[State] = @State,
+	[ZipCode] = @ZipCode,
+	[Country] = @Country,
+	[Phone] = @Phone,
+	[SSN] = @SSN,
+	[IsActive] = @IsActive,
+	[IsDeleted] = @IsDeleted,
+	[IsInstaller] = @IsInstaller,
+	[IsSalesPerson] = @IsSalesPerson,
+	[IsServiceCall] = @IsServiceCall,
+	[HireDate] = @HireDate,
+	[ProfilePicture] = @ProfilePicture,
+	[Session] = @Session,
+	[JobTitle] = @JobTitle,
+	[PlaceOfBirth] = @PlaceOfBirth,
+	[SalesCommissionStructure] = @SalesCommissionStructure,
+	[TechCommissionStructure] = @TechCommissionStructure,
+	[RecruitmentProcess] = @RecruitmentProcess,
+	[Recruited] = @Recruited,
+	[CreatedDate] = @CreatedDate,
+	[Status] = @Status,
+	[LastUpdatedBy] = @LastUpdatedBy,
+	[LastUpdatedDate] = @LastUpdatedDate
+	WHERE ( Id = @Id )
+
+	DECLARE @Err int
+	DECLARE @Result int
+	SET @Result = @@ROWCOUNT
+	SET @Err = @@ERROR 
+
+	If @Err <> 0 
+	BEGIN
+		SET @Result = -1
+	END
+
+	RETURN @Result
+GO
+
+/****** Object:  StoredProcedure [dbo].DeleteEmployee    Script Date: 3/28/2018 2:04:40 PM ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DeleteEmployee]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[DeleteEmployee]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE DeleteEmployee
+(
+	@Id int
+)
+AS
+	DELETE [dbo].[Employee] 
+
+    WHERE ( Id = @Id )
+
+	DECLARE @Err int
+	DECLARE @Result int
+
+	SET @Result = @@ROWCOUNT
+	SET @Err = @@ERROR 
+
+	If @Err <> 0 
+	BEGIN
+		SET @Result = -1
+	END
+
+	RETURN @Result
+GO
+
+/****** Object:  StoredProcedure [dbo].GetAllEmployee    Script Date: 3/28/2018 2:04:40 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetAllEmployee]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetAllEmployee]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetAllEmployee
+AS
+	SELECT *		
+	FROM
+		[dbo].[Employee]
+
+RETURN @@ROWCOUNT
+GO
+
+/****** Object:  StoredProcedure [dbo].GetEmployeeById    Script Date: 3/28/2018 2:04:40 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetEmployeeById]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetEmployeeById]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetEmployeeById
+(
+	@Id int
+)
+AS
+	SELECT *		
+	FROM
+		[dbo].[Employee]
+	WHERE ( Id = @Id )
+
+RETURN @@ROWCOUNT
+GO
+
+/****** Object:  StoredProcedure [dbo].GetEmployeeMaximumId    Script Date: 3/28/2018 2:04:40 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetEmployeeMaximumId]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetEmployeeMaximumId]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetEmployeeMaximumId
+AS
+	DECLARE @Result int
+	SET @Result = 0
+	
+	SELECT @Result = MAX(Id) 		
+	FROM
+		[dbo].[Employee]
+
+	If @Result > 0 
+		BEGIN
+			-- Everything is OK
+			RETURN @Result
+		END
+		ELSE
+		BEGIN
+			RETURN 0
+		END
+RETURN @Result
+GO
+
+/****** Object:  StoredProcedure [dbo].GetEmployeeRowCount    Script Date: 3/28/2018 2:04:40 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetEmployeeRowCount]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetEmployeeRowCount]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetEmployeeRowCount
+AS
+	DECLARE @Result int
+	SET @Result = 0
+	SELECT @Result = COUNT(*) 		
+	FROM
+		[dbo].[Employee]
+		
+RETURN @Result
+GO
+
+/****** Object:  StoredProcedure [dbo].GetPagedEmployee    Script Date: 3/28/2018 2:04:40 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetPagedEmployee]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetPagedEmployee]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetPagedEmployee
+(
+	@TotalRows		int	OUTPUT,
+	@PageIndex	int,
+	@RowPerPage		int,
+	@WhereClause	nvarchar(4000),
+	@SortColumn		nvarchar(128),
+	@SortOrder		nvarchar(4)
+)
+AS
+BEGIN 
+
+SET @PageIndex = isnull(@PageIndex, -1)
+SET @RowPerPage = isnull(@RowPerPage, -1)
+SET @WhereClause = isnull(@WhereClause, '')
+SET @SortColumn = isnull(@SortColumn, '')
+SET @SortOrder = isnull(@SortOrder, '')
+SET @TotalRows = 0
+SET @RowPerPage = @RowPerPage -1
+DECLARE @SQL1 nvarchar(4000)
+DECLARE @SQL2 nvarchar(4000)
+
+IF (@WhereClause != '')
+BEGIN
+	SET @WhereClause = 'WHERE ' + char(13) + @WhereClause	
+END
+
+IF (@SortColumn != '')
+BEGIN
+	SET @SortColumn = 'ORDER BY ' + @SortColumn
+
+	IF (@SortOrder != '')
+	BEGIN
+		SET @SortColumn = @SortColumn + ' ' + @SortOrder
+	END
+END
+ELSE
+BEGIN
+	SET @SortColumn = @SortColumn + ' ORDER BY [Id] ASC'
+END
+
+SET @SQL1 = 'WITH EmployeeEntries AS (
+			SELECT ROW_NUMBER() OVER ('+ @SortColumn +')AS Row,
+	[Id],
+	[EmployeeId],
+	[UserId],
+	[Title],
+	[FirstName],
+	[LastName],
+	[Email],
+	[Street],
+	[City],
+	[State],
+	[ZipCode],
+	[Country],
+	[Phone],
+	[SSN],
+	[IsActive],
+	[IsDeleted],
+	[IsInstaller],
+	[IsSalesPerson],
+	[IsServiceCall],
+	[HireDate],
+	[ProfilePicture],
+	[Session],
+	[JobTitle],
+	[PlaceOfBirth],
+	[SalesCommissionStructure],
+	[TechCommissionStructure],
+	[RecruitmentProcess],
+	[Recruited],
+	[CreatedDate],
+	[Status],
+	[LastUpdatedBy],
+	[LastUpdatedDate]
+				FROM 
+				[dbo].[Employee]
+					'+ @WhereClause +'
+				)
+				SELECT 
+	[Id],
+	[EmployeeId],
+	[UserId],
+	[Title],
+	[FirstName],
+	[LastName],
+	[Email],
+	[Street],
+	[City],
+	[State],
+	[ZipCode],
+	[Country],
+	[Phone],
+	[SSN],
+	[IsActive],
+	[IsDeleted],
+	[IsInstaller],
+	[IsSalesPerson],
+	[IsServiceCall],
+	[HireDate],
+	[ProfilePicture],
+	[Session],
+	[JobTitle],
+	[PlaceOfBirth],
+	[SalesCommissionStructure],
+	[TechCommissionStructure],
+	[RecruitmentProcess],
+	[Recruited],
+	[CreatedDate],
+	[Status],
+	[LastUpdatedBy],
+	[LastUpdatedDate]
+				FROM 
+					EmployeeEntries
+				WHERE 
+					Row between '+ CONVERT(nvarchar(10), (@PageIndex * @RowPerPage) + 1) +'And ('+ CONVERT(nvarchar(10), (@PageIndex * @RowPerPage) +@RowPerPage+ 1) +')'
+	
+
+SET @SQL2 =		' SELECT @TotalRows = COUNT(*) 
+				FROM 
+				[dbo].[Employee] ' + @WhereClause
+								
+EXEC sp_executesql @SQL2, N'@TotalRows int output', @TotalRows = @TotalRows output
+
+EXEC sp_executesql @SQL1
+
+RETURN @@ROWCOUNT
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].GetEmployeeByQuery    Script Date: 3/28/2018 2:04:40 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetEmployeeByQuery]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetEmployeeByQuery]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetEmployeeByQuery
+(
+	@Query	nvarchar(4000)
+)
+AS
+BEGIN 
+
+SET @Query = isnull(@Query, '')
+DECLARE @SQL1 nvarchar(4000)
+
+IF (@Query != '')
+BEGIN
+	SET @Query = 'WHERE ' + char(13) + @Query	
+END
+
+SET @SQL1 =		'SELECT * 
+				FROM 
+				[dbo].[Employee] ' + @Query
+								
+EXEC sp_executesql @SQL1
+
+RETURN @@ROWCOUNT
+END
+GO
+

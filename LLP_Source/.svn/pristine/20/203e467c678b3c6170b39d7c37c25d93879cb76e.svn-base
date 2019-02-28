@@ -1,0 +1,115 @@
+﻿@model LLP.Entities.UserLogin
+
+@{
+    Layout = null;
+}
+
+<link href="~/Content/css/pnotify.css" rel="stylesheet" />
+
+<link href="~/Content/css/pnotify.buttons.css" rel="stylesheet" />
+
+<link href="~/Content/css/pnotify.nonblock.css" rel="stylesheet" />
+<script src="~/Content/scripts/jquery.min.js"></script>
+<script src="~/Content/tinymce/tinymce.min.js"></script>
+<script src="~/Content/tinymce/init-tinymce.js"></script>
+<script src="~/Content/scripts/pnotify.js"></script>
+<script src="~/Content/scripts/pnotify.nonblock.js"></script>
+<script src="~/Content/scripts/pnotify.buttons.js"></script>
+
+<img src="~/Content/images/UserNm.png" alt="A Category Name" width="60" height="60">
+
+<div class="form-horizontal form-label-left">
+    @Html.HiddenFor(m => m.Id)
+    <span class="section">Personal Info</span>
+    <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="firstname">
+            User Name <span class="required">*</span>
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input id="txtusername" class="form-control col-md-7 col-xs-12" data-validate-length-range="6" data-validate-words="2" name="firstname" value="@Model.UserName" required="required" type="text" placeholder="First Name eg: Dev">
+        </div>
+    </div>
+
+    <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">
+            Email <span class="required">*</span>
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="email" id="txtemail" name="email" required="required" value="@Model.EmailAddress" class="form-control col-md-7 col-xs-12" placeholder="Email">
+        </div>
+    </div>
+
+
+    <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="telephone">
+            Password <span class="required">*</span>
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="tel" id="txtpass" name="phone" value="@Model.Password" required="required" data-validate-length-range="8,20" class="form-control col-md-7 col-xs-12" placeholder="Telephone Number">
+        </div>
+    </div>
+
+    <div class="ln_solid"></div>
+    <div class="form-group">
+        <div class="col-md-6 col-md-offset-3">
+            <input type="button" id="cancel" class="btn btn-success" value="Cancel" />
+            <input type="Submit" id="btnSaveChapter" class="btn btn-success" value="Update info" />
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+        $('#btnSaveChapter').click(function () {
+            var emp = {};
+            emp.Id = $("#Id").val();
+            emp.UserName = $("#txtusername").val();
+            emp.EmailAddress = $("#txtemail").val();
+            emp.Password = $("#txtpass").val();
+            emp.IsActive = "True";
+
+            $.ajax({
+                type: "POST",
+                url: "/User/UpdateUser",
+                data: '{user: ' + JSON.stringify(emp) + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response == true) {
+                        new PNotify({
+                            title: 'Saved Successfully',
+                            text: 'The Content is saved...',
+                            type: 'success',
+                            styling: 'bootstrap3'
+                        });
+                    }
+                    else {
+                        new PNotify({
+                            title: 'Not Saved ',
+                            text: 'The Content is saved...',
+                            type: 'error',
+                            styling: 'bootstrap3'
+                        });
+                    }
+
+                }
+            });
+        });
+
+    });
+
+
+
+    $(document).ready(function () {
+        $("#cancel").click(function () {
+
+            $(".main").load("/User/DashBoard");
+        })
+
+    });
+
+
+
+</script>

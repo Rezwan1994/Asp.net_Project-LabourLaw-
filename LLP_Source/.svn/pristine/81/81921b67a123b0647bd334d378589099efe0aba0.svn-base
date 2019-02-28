@@ -1,0 +1,66 @@
+﻿@model LLP.Web.BookChapter
+@using Localize = LLP.Web.Ui.Helper.LanguageHelper
+@{
+    Layout = null;
+
+}
+<div class="Chapter_List">
+
+    <div style="padding:10px; ">
+        <div class="treeview" id="myTable">
+            @if (Model.ChapterList != null)
+            {
+                foreach (var a in Model.ChapterList.Where(x => x.Type == "Rule"))
+                {
+                    <div class="search_row">
+
+                        <h4 id="txtChapt">@a.Name</h4>
+
+                        <div class="search_content">
+                            @if (Model.ContentList != null && Model.ContentList.Count() > 0)
+                            {
+
+                                <ul class="ChapterName" id="txtChaptername">
+                                    @TreeView.GetTreeView(Model.ContentList, Model.ContentList.FirstOrDefault().ParentId, Convert.ToInt32(a.ChapterNo))
+
+                                </ul>
+                            }
+                        </div>
+
+                    </div>
+
+
+                }
+            }  
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+
+    $(document).ready(function () {
+        alert("sdfd");
+        $(".treeview li>ul").css('display', 'none'); // Hide all 2-level ul
+     
+            $(".collapsible").click(function (e) {
+                e.preventDefault();
+                $(this).toggleClass("collapse expand");
+                $(this).closest('li').children('ul').slideToggle();
+
+
+            });
+      
+
+        $(".title").click(function (item) {
+            alert('sdfdsf');
+            var clickitem = $(item.target).attr('data-location');
+            console.log(clickitem);
+            $(".Chapter_Content").load(clickitem);
+        })
+    });
+
+</script>
+
+

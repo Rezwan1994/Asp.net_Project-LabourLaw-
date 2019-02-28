@@ -1,0 +1,50 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
+
+namespace LLP.Web
+{
+    public class RouteConfig
+    {
+        public static void RegisterRoutes(RouteCollection routes)
+        {
+            routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+
+            routes.MapRoute(
+               name: "RtLogin",
+               url: "login",
+               defaults: new { controller = "Home", action = "Login", id = UrlParameter.Optional }
+           );
+            routes.MapRoute(
+              name: "Rtregistration",
+              url: "registration",
+              defaults: new { controller = "Home", action = "Registration", id = UrlParameter.Optional }
+          );
+            routes.MapRoute(
+            name: "rtTitleDetails",
+            url: "Chapter/{ChapterNo}/{ChapterName}",
+            defaults: new { controller = "Home", action = "TitleDetails", Title = UrlParameter.Optional }
+        );
+            routes.MapRoute(
+              name: "rtChapterRule",
+              url: "bangladesh-labor-rule",
+              defaults: new { controller = "Admin", action = "LoadChapterList", Title = UrlParameter.Optional }
+          );
+            routes.MapRoute(
+          name: "rtChapterAct",
+          url: "bangladesh-labor-Act",
+          defaults: new { controller = "Admin", action = "ActChapterList", Title = UrlParameter.Optional }
+      );
+
+            routes.MapRoute(
+                name: "Default",
+                url: "{controller}/{action}/{id}",
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+            );
+           
+        }
+    }
+}

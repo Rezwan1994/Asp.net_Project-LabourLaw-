@@ -1,0 +1,137 @@
+﻿@model List<LLP.Entities.Chapter> 
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/searchstyle.css" rel="stylesheet" />
+    <link href="~/Content/css/font-awesome.min.css" rel="stylesheet" />
+   
+
+</head>
+<body>
+
+    Search:
+
+    <style>
+        .chapter{
+            display: block;
+            width: 100%;
+            color: blue;
+            font-weight: 400;
+        }
+        .chapter:hover {
+           background-color:#DDDDDD;
+          
+        }
+        .suggestion {
+            width: 100%;
+            display: block;
+            background-color: white;
+            border: 1px solid #DDDDDD;
+            margin-top: -12px;
+            margin-left: -48px;
+        }
+        .btnsearch {
+            width: 70%;
+            margin: auto;
+            position: fixed;
+            display: table;
+            text-align: center;
+            color: black;
+        }
+            
+    </style>
+
+    <div class="main">
+        @if (Session["UserName"] != null)
+{
+    <div >
+        Welcome : <a href="#"> @Session["UserName"] </a><br />
+        <a href="/Register/Logout"> Logout</a>
+    </div>
+}
+        <div id="outPopUp">
+            <center>
+                <form method="post">
+                    <center><img src="~/Content/images/labour_law_logo.png"/></center>
+                    <br />
+                    <div style="width: 70%;margin: auto;">
+                        <input style="width: 100%;" type="text" id="myInput" class ="search" name="search" value="" placeholder="" class="input-lg" autofocus />
+                        <div id="searchSuggestion" class="suggestion" style="float:left; z-index:9;position:relative; ">
+
+                        </div>
+                        <br />
+                        <div class="btnsearch" >
+
+                            <input type="submit" name="submit" value="Search" class="btn btn-group">
+                            <input type="button" name="feeling" value="I'm Feeling Lucky" class="btn btn-group">
+
+                        </div>
+                     
+                    </div>
+
+                 
+                  
+                </form>
+
+           
+            </center>
+        </div>
+    </div>
+
+    <script src="~/Content/scripts/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+          // Hide all 2-level ul
+        $("input").keyup(function () {
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("list", "Home")',
+                dataType: "json",
+                data: { search: $("#myInput").val() },
+                success: function (data) {
+                   // $('#msg').html(data.length + " book found");
+                    console.log(data);
+                    var suggestionlist = '';
+                    for (var sterm = 0; sterm < data.length; sterm++) {
+
+                        var item = data[sterm];
+
+                        suggestionlist += ('<p class="chapter" onclick="myFunction(this)" item="'+item+'" >' + data[sterm] + '</p>');
+
+                    }
+                    $('#searchSuggestion').html(suggestionlist);
+
+                },
+                error: function (xhr, status, error) {
+                    alert("Error");
+                }
+            });
+
+        })
+            $("html").click(function () {
+                $(".chapter").hide();
+            })
+
+    });
+
+
+        function myFunction(item) {
+            var value = $(item).attr('item');
+            localStorage.setItem("value", value);
+
+            $('.search').val($(item).attr('item'))
+            $(".chapter").hide();
+            window.location.href = '@Url.Action("Search", "Home")';
+        }
+    </script>
+
+</body>
+</html>
+
+

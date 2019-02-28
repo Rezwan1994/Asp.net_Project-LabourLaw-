@@ -1,0 +1,376 @@
+﻿USE llpdb
+GO
+
+/****** Object:  StoredProcedure [dbo]..InsertELMAH_Error    Script Date: 3/28/2018 2:04:40 PM ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[InsertELMAH_Error]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[InsertELMAH_Error]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE InsertELMAH_Error
+(
+	@ErrorId uniqueidentifier,
+	@Application nvarchar(60),
+	@Host nvarchar(50),
+	@Type nvarchar(100),
+	@Source nvarchar(60),
+	@Message nvarchar(500),
+	@User nvarchar(50),
+	@StatusCode int,
+	@TimeUtc datetime,
+	@Sequence int,
+	@AllXml ntext
+)
+AS
+    INSERT INTO [dbo].[ELMAH_Error] 
+	(
+	[ErrorId],
+	[Application],
+	[Host],
+	[Type],
+	[Source],
+	[Message],
+	[User],
+	[StatusCode],
+	[TimeUtc],
+	[Sequence],
+	[AllXml]
+    ) 
+	VALUES 
+	(
+	@ErrorId,
+	@Application,
+	@Host,
+	@Type,
+	@Source,
+	@Message,
+	@User,
+	@StatusCode,
+	@TimeUtc,
+	@Sequence,
+	@AllXml
+    )
+	DECLARE @Err int
+	DECLARE @Result int
+
+	SET @Result = @@ROWCOUNT
+	SET @Err = @@ERROR 
+	If @Err <> 0 
+	BEGIN
+		RETURN @Err
+	END
+	ELSE
+	BEGIN
+		If @Result = 1 
+		BEGIN
+			-- Everything is OK
+			RETURN @Result
+		END
+		ELSE
+		BEGIN
+			RETURN 0
+		END
+	END
+
+	RETURN @Result
+	
+GO
+
+/****** Object:  StoredProcedure [dbo].UpdateELMAH_Error    Script Date: 3/28/2018 2:04:40 PM ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UpdateELMAH_Error]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[UpdateELMAH_Error]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE UpdateELMAH_Error
+(
+	@ErrorId uniqueidentifier,
+	@Application nvarchar(60),
+	@Host nvarchar(50),
+	@Type nvarchar(100),
+	@Source nvarchar(60),
+	@Message nvarchar(500),
+	@User nvarchar(50),
+	@StatusCode int,
+	@TimeUtc datetime,
+	@Sequence int,
+	@AllXml ntext
+)
+AS
+    UPDATE [dbo].[ELMAH_Error] 
+	SET
+	[Application] = @Application,
+	[Host] = @Host,
+	[Type] = @Type,
+	[Source] = @Source,
+	[Message] = @Message,
+	[User] = @User,
+	[StatusCode] = @StatusCode,
+	[TimeUtc] = @TimeUtc,
+	[Sequence] = @Sequence,
+	[AllXml] = @AllXml
+	WHERE ( ErrorId = @ErrorId )
+
+	DECLARE @Err int
+	DECLARE @Result int
+	SET @Result = @@ROWCOUNT
+	SET @Err = @@ERROR 
+
+	If @Err <> 0 
+	BEGIN
+		SET @Result = -1
+	END
+
+	RETURN @Result
+GO
+
+/****** Object:  StoredProcedure [dbo].DeleteELMAH_Error    Script Date: 3/28/2018 2:04:40 PM ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DeleteELMAH_Error]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[DeleteELMAH_Error]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE DeleteELMAH_Error
+(
+	@ErrorId uniqueidentifier
+)
+AS
+	DELETE [dbo].[ELMAH_Error] 
+
+    WHERE ( ErrorId = @ErrorId )
+
+	DECLARE @Err int
+	DECLARE @Result int
+
+	SET @Result = @@ROWCOUNT
+	SET @Err = @@ERROR 
+
+	If @Err <> 0 
+	BEGIN
+		SET @Result = -1
+	END
+
+	RETURN @Result
+GO
+
+/****** Object:  StoredProcedure [dbo].GetAllELMAH_Error    Script Date: 3/28/2018 2:04:40 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetAllELMAH_Error]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetAllELMAH_Error]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetAllELMAH_Error
+AS
+	SELECT *		
+	FROM
+		[dbo].[ELMAH_Error]
+
+RETURN @@ROWCOUNT
+GO
+
+/****** Object:  StoredProcedure [dbo].GetELMAH_ErrorByErrorId    Script Date: 3/28/2018 2:04:40 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetELMAH_ErrorByErrorId]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetELMAH_ErrorByErrorId]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetELMAH_ErrorByErrorId
+(
+	@ErrorId uniqueidentifier
+)
+AS
+	SELECT *		
+	FROM
+		[dbo].[ELMAH_Error]
+	WHERE ( ErrorId = @ErrorId )
+
+RETURN @@ROWCOUNT
+GO
+
+/****** Object:  StoredProcedure [dbo].GetELMAH_ErrorMaximumErrorId    Script Date: 3/28/2018 2:04:40 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetELMAH_ErrorMaximumErrorId]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetELMAH_ErrorMaximumErrorId]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetELMAH_ErrorMaximumErrorId
+AS
+	DECLARE @Result uniqueidentifier
+	SET @Result = 0
+	
+	SELECT @Result = MAX(ErrorId) 		
+	FROM
+		[dbo].[ELMAH_Error]
+
+	If @Result > 0 
+		BEGIN
+			-- Everything is OK
+			RETURN @Result
+		END
+		ELSE
+		BEGIN
+			RETURN 0
+		END
+RETURN @Result
+GO
+
+/****** Object:  StoredProcedure [dbo].GetELMAH_ErrorRowCount    Script Date: 3/28/2018 2:04:40 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetELMAH_ErrorRowCount]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetELMAH_ErrorRowCount]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetELMAH_ErrorRowCount
+AS
+	DECLARE @Result uniqueidentifier
+	SET @Result = 0
+	SELECT @Result = COUNT(*) 		
+	FROM
+		[dbo].[ELMAH_Error]
+		
+RETURN @Result
+GO
+
+/****** Object:  StoredProcedure [dbo].GetPagedELMAH_Error    Script Date: 3/28/2018 2:04:40 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetPagedELMAH_Error]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetPagedELMAH_Error]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetPagedELMAH_Error
+(
+	@TotalRows		int	OUTPUT,
+	@PageIndex	int,
+	@RowPerPage		int,
+	@WhereClause	nvarchar(4000),
+	@SortColumn		nvarchar(128),
+	@SortOrder		nvarchar(4)
+)
+AS
+BEGIN 
+
+SET @PageIndex = isnull(@PageIndex, -1)
+SET @RowPerPage = isnull(@RowPerPage, -1)
+SET @WhereClause = isnull(@WhereClause, '')
+SET @SortColumn = isnull(@SortColumn, '')
+SET @SortOrder = isnull(@SortOrder, '')
+SET @TotalRows = 0
+SET @RowPerPage = @RowPerPage -1
+DECLARE @SQL1 nvarchar(4000)
+DECLARE @SQL2 nvarchar(4000)
+
+IF (@WhereClause != '')
+BEGIN
+	SET @WhereClause = 'WHERE ' + char(13) + @WhereClause	
+END
+
+IF (@SortColumn != '')
+BEGIN
+	SET @SortColumn = 'ORDER BY ' + @SortColumn
+
+	IF (@SortOrder != '')
+	BEGIN
+		SET @SortColumn = @SortColumn + ' ' + @SortOrder
+	END
+END
+ELSE
+BEGIN
+	SET @SortColumn = @SortColumn + ' ORDER BY [ErrorId] ASC'
+END
+
+SET @SQL1 = 'WITH ELMAH_ErrorEntries AS (
+			SELECT ROW_NUMBER() OVER ('+ @SortColumn +')AS Row,
+	[ErrorId],
+	[Application],
+	[Host],
+	[Type],
+	[Source],
+	[Message],
+	[User],
+	[StatusCode],
+	[TimeUtc],
+	[Sequence],
+	[AllXml]
+				FROM 
+				[dbo].[ELMAH_Error]
+					'+ @WhereClause +'
+				)
+				SELECT 
+	[ErrorId],
+	[Application],
+	[Host],
+	[Type],
+	[Source],
+	[Message],
+	[User],
+	[StatusCode],
+	[TimeUtc],
+	[Sequence],
+	[AllXml]
+				FROM 
+					ELMAH_ErrorEntries
+				WHERE 
+					Row between '+ CONVERT(nvarchar(10), (@PageIndex * @RowPerPage) + 1) +'And ('+ CONVERT(nvarchar(10), (@PageIndex * @RowPerPage) +@RowPerPage+ 1) +')'
+	
+
+SET @SQL2 =		' SELECT @TotalRows = COUNT(*) 
+				FROM 
+				[dbo].[ELMAH_Error] ' + @WhereClause
+								
+EXEC sp_executesql @SQL2, N'@TotalRows int output', @TotalRows = @TotalRows output
+
+EXEC sp_executesql @SQL1
+
+RETURN @@ROWCOUNT
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].GetELMAH_ErrorByQuery    Script Date: 3/28/2018 2:04:40 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetELMAH_ErrorByQuery]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetELMAH_ErrorByQuery]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetELMAH_ErrorByQuery
+(
+	@Query	nvarchar(4000)
+)
+AS
+BEGIN 
+
+SET @Query = isnull(@Query, '')
+DECLARE @SQL1 nvarchar(4000)
+
+IF (@Query != '')
+BEGIN
+	SET @Query = 'WHERE ' + char(13) + @Query	
+END
+
+SET @SQL1 =		'SELECT * 
+				FROM 
+				[dbo].[ELMAH_Error] ' + @Query
+								
+EXEC sp_executesql @SQL1
+
+RETURN @@ROWCOUNT
+END
+GO
+

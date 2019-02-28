@@ -1,0 +1,151 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    line-height: 28px;
+
+  
+}
+html, body {
+    height: 100%;
+    background-color: #ECF0F5;
+     
+}
+
+.wrapper{
+      
+}
+.option_Pannel{
+    overflow: hidden;
+}
+.logo{
+    width: 35%;
+    float: left;
+    padding-left: 20px;
+}
+.options {
+    width: 65%;
+    float: right;
+    padding-left: 215px;
+    padding-top: 15px;
+}
+.button{
+    display: table;
+    margin: 0 auto;
+    padding: 65px;
+}
+  
+.btn-info {
+
+    color: #fff;
+    background-color: #5bc0de;
+    border-color: #46b8da;
+    width: 140px;
+    height: 40px;
+
+}
+.options ul li{
+    list-style: none;
+    display: inline-block;
+
+}
+.options ul li button
+{
+width: 155px;
+}
+.form_Pannel{
+    margin: 18px;
+    background-color: white;
+    display: block;
+    height: 450px;
+}
+.form_left{
+    float: left;
+    width: 50%;
+    padding-left: 50px;
+   
+    padding-top: 20px;
+    height: 340px;
+}
+
+.form_right{
+    float: right;
+    width: 50%;
+    padding-right: 140px;
+   
+    padding-top: 20px;
+    display: block;
+    height: 340px;
+}
+.form_right span{
+    width: 50px;
+}
+.form_left table tr td{
+    padding: 2px;
+}
+.form_right table tr td{
+    padding: 2px;
+}
+.product_Table{
+    margin: 18px;
+    background-color: white;
+}
+.paging{
+    display: block;
+    overflow: hidden;
+    background-color: white;
+    margin: 18px;
+    overflow: hidden;
+
+}
+.left_area{
+    float: left;
+    width: 70%;
+}
+.right_area{
+    float: right;
+}
+.numbers{
+    width: 25%;
+ 
+    display: inline-block;
+    
+}
+.combo{
+    width: 75%;
+    float: right;
+}
+    .combo p {
+        padding-top: 20px;
+        width: 135px;
+        width: 172px;
+        padding-left: 43px;
+    }
+.pagination {
+    display: inline-block;
+    padding-left: 0;
+    margin: 20px 0;
+    border-radius: 4px;
+    padding-left: 20px;
+    width:190px;
+}
+.right_area p{
+   display: inline-block;
+}
+.right_area ul li{
+   display: inline-block;
+    list-style: none;
+}
+.right_area ul li:first-child{
+    margin-bottom: 5px;
+}
+.right_area input {
+    width: 40px;
+    float: right;
+    margin-top: 26px;
+    margin-right: 24px;
+}

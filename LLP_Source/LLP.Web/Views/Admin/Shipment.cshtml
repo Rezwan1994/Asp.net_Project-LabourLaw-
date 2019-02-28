@@ -1,0 +1,228 @@
+﻿
+@{
+    ViewBag.Title = "Shipment";
+    Layout = "~/Views/Shared/Lay_Out.cshtml";
+}
+
+<html>
+<head>
+    <title>Labour Law Partner</title>
+
+
+    <link href="~/Content/css/ShipmentStyle.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.1.117/styles/kendo.common-material.min.css" />
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.1.117/styles/kendo.material.min.css" />
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.1.117/styles/kendo.material.mobile.min.css" />
+
+    <script src="https://kendo.cdn.telerik.com/2018.1.117/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2018.1.117/js/kendo.all.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <div class="content-header">
+            <div class="pageName">
+                <h3>Shipments</h3>
+            </div>
+            <div class="login">
+                <ul>
+                    <li class="hoverc">
+                        <button type="button" class="btn btn-success">
+                            Set As Delivered (Selected)
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="btn btn-info">
+                            Set As Shiped (Selected)
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" name="importexcel" class="btn btn-primary">
+                            Print Packaging Slips
+                        </button>
+                    </li>
+
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="content">
+            <div class="Category">
+
+                <table width="95%" cellspacing="3">
+                  
+                    <tr>
+                        <td align="right">Start Date<img src="~/Content/Image/A Category Name.png" alt="A Category Name" width="20" height="20"> &nbsp &nbsp </td>
+                        <td>
+                            <input id="datepicker" class="form-control" title="datepicker" />
+                            <script>
+            $(document).ready(function() {
+                // create DatePicker from input HTML element
+                $("#datepicker").kendoDatePicker();
+
+                $("#monthpicker").kendoDatePicker({
+                    // defines the start view
+                    start: "year",
+
+                    // defines when the calendar should return date
+                    depth: "year",
+
+                    // display month and year in the input
+                    format: "MMMM yyyy",
+
+                    // specifies that DateInput is used for masking the input element
+                    dateInput: true
+                });
+            });
+                            </script>
+
+                        </td>
+                        <td align="right">Country<img src="~/Content/Image/A Category Name.png" alt="A Category Name" width="20" height="20"> &nbsp &nbsp </td>
+                        <td>
+                            <select name="Country" class="form-control">
+                                <option value="*" selected>*</option>
+
+                                <option value="United States">United States</option>
+                                <option value="Afganistan">Afganistan</option>
+                                <option value="Albania">Albania</option>
+                                <option value="Algeria">Algeria</option>
+                                <option value="Australia">Australia</option>
+                                <option value="Bangladesh">Bangladesh</option>
+                            </select>
+                        </td>
+
+
+
+                    </tr>
+
+                    <tr>
+                        <td align="right">End Date<img src="~/Content/Image/A Category Name.png" alt="A Category Name" width="20" height="20"> &nbsp &nbsp </td>
+                        <td>
+                            <input id="datepicker1" title="datepicker1" class="form-control" />
+                            <script>
+            $(document).ready(function() {
+                // create DatePicker from input HTML element
+                $("#datepicker1").kendoDatePicker();
+
+                $("#monthpicker").kendoDatePicker({
+                    // defines the start view
+                    start: "year",
+
+                    // defines when the calendar should return date
+                    depth: "year",
+
+                    // display month and year in the input
+                    format: "MMMM yyyy",
+
+                    // specifies that DateInput is used for masking the input element
+                    dateInput: true
+                });
+            });
+                            </script>
+
+                        </td>
+                        <td align="right">State/province<img src="~/Content/Image/A Category Name.png" alt="A Category Name" width="20" height="20"> &nbsp &nbsp </td>
+                        <td>
+                            <select name="Country" class="form-control">
+                                <option value="*" selected>*</option>
+
+
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td align="right">Tracking Number<img src="~/Content/Image/A Category Name.png" alt="A Category Name" width="20" height="20"> &nbsp &nbsp </td>
+                        <td><input type="text" class="form-control"></td>
+                        <td align="right">City<img src="A Category Name.png" alt="A Category Name" width="20" height="20"> &nbsp &nbsp </td>
+                        <td><input type="text" class="form-control"></td>
+                    </tr>
+
+                    <tr>
+                        <td align="right">WareHouse<img src="~/Content/Image/A Category Name.png" alt="A Category Name" width="20" height="20"> &nbsp &nbsp </td>
+                        <td>
+                            <select name="WareHouse" class="form-control">
+                                <option value="All" selected>All</option>
+
+                                <option value="WareHouse 1(New York)">WareHouse 1(New York)</option>
+                                <option value="WareHouse 2(Los Angeles)">WareHouse 2(Los Angeles)</option>
+                            </select>
+                        </td>
+                        <td align="right">Load not shipped<img src="~/Content/Image/A Category Name.png" alt="A Category Name" width="20" height="20"> &nbsp &nbsp </td>
+                        <td><input type="checkbox" class="form-control"></td>
+                    </tr>
+
+                    <tr><td><span id="allSpan"></span></td></tr>
+                </table>
+
+                <div>
+                    &nbsp
+                </div>
+
+            </div>
+            <div class="searchButton" class="form-control">
+                <button type="button" class="btn btn-primary btn-lg">
+                    Search
+                </button>
+            </div>
+
+
+            <div>
+                &nbsp
+            </div>
+            <div>
+                &nbsp
+            </div>
+
+            <div class="Table">
+                <table width="85%">
+
+                    <tr>
+                        <td>&nbsp</td>
+                        <td><input type="checkbox" class="form-control"></td>
+                        <td>Shipment #</td>
+                        <td>Order #</td>
+                        <td>Tracking number</td>
+                        <td>Tottal Weight</td>
+                        <td>Date Shipped</td>
+                        <td>Date Delivered</td>
+                        <td>View</td>
+                    </tr>
+
+
+                    <tr><td><span id="allSpan"></span></td></tr>
+                </table>
+            </div>
+
+
+            <div id="myDIV" class="MenuButton">
+                <button class="btn">|<</button>
+                <button class="btn active"><</button>
+                <button class="btn">1</button>
+                <button class="btn">></button>
+                <button class="btn">>|</button>
+
+                <select name="itemsPerPage">
+                    <option value="20" selected>20</option>
+
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                items per page
+
+            </div>
+
+        </div>
+
+    </div>
+</body>
+</html>
+

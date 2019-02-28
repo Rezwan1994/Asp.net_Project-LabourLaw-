@@ -1,0 +1,389 @@
+﻿USE llpdb
+GO
+
+/****** Object:  StoredProcedure [dbo]..InsertInvoiceDetail    Script Date: 2/14/2018 5:18:56 PM ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[InsertInvoiceDetail]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[InsertInvoiceDetail]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE InsertInvoiceDetail
+(
+	@Id int OUTPUT,
+	@InvoiceId nvarchar(15),
+	@InventoryId uniqueidentifier,
+	@EquipmentId uniqueidentifier,
+	@EquipName nvarchar(500),
+	@EquipDetail nvarchar(max),
+	@CompanyId uniqueidentifier,
+	@BundleId int,
+	@Quantity int,
+	@UnitPrice float,
+	@TotalPrice float,
+	@CreatedDate datetime,
+	@CreatedBy nvarchar(50)
+)
+AS
+    INSERT INTO [dbo].[InvoiceDetail] 
+	(
+	[InvoiceId],
+	[InventoryId],
+	[EquipmentId],
+	[EquipName],
+	[EquipDetail],
+	[CompanyId],
+	[BundleId],
+	[Quantity],
+	[UnitPrice],
+	[TotalPrice],
+	[CreatedDate],
+	[CreatedBy]
+    ) 
+	VALUES 
+	(
+	@InvoiceId,
+	@InventoryId,
+	@EquipmentId,
+	@EquipName,
+	@EquipDetail,
+	@CompanyId,
+	@BundleId,
+	@Quantity,
+	@UnitPrice,
+	@TotalPrice,
+	@CreatedDate,
+	@CreatedBy
+    )
+	DECLARE @Err int
+	DECLARE @Result int
+
+	SET @Result = @@ROWCOUNT
+	SET @Err = @@ERROR 
+	If @Err <> 0 
+	BEGIN
+		SET @Id = -1
+		RETURN @Err
+	END
+	ELSE
+	BEGIN
+		If @Result = 1 
+		BEGIN
+			-- Everything is OK
+			SET @Id = @@IDENTITY
+		END
+		ELSE
+		BEGIN
+			SET @Id = -1
+			RETURN 0
+		END
+	END
+
+	RETURN @Id
+GO
+
+/****** Object:  StoredProcedure [dbo].UpdateInvoiceDetail    Script Date: 2/14/2018 5:18:56 PM ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UpdateInvoiceDetail]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[UpdateInvoiceDetail]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE UpdateInvoiceDetail
+(
+	@Id int,
+	@InvoiceId nvarchar(15),
+	@InventoryId uniqueidentifier,
+	@EquipmentId uniqueidentifier,
+	@EquipName nvarchar(500),
+	@EquipDetail nvarchar(max),
+	@CompanyId uniqueidentifier,
+	@BundleId int,
+	@Quantity int,
+	@UnitPrice float,
+	@TotalPrice float,
+	@CreatedDate datetime,
+	@CreatedBy nvarchar(50)
+)
+AS
+    UPDATE [dbo].[InvoiceDetail] 
+	SET
+	[InvoiceId] = @InvoiceId,
+	[InventoryId] = @InventoryId,
+	[EquipmentId] = @EquipmentId,
+	[EquipName] = @EquipName,
+	[EquipDetail] = @EquipDetail,
+	[CompanyId] = @CompanyId,
+	[BundleId] = @BundleId,
+	[Quantity] = @Quantity,
+	[UnitPrice] = @UnitPrice,
+	[TotalPrice] = @TotalPrice,
+	[CreatedDate] = @CreatedDate,
+	[CreatedBy] = @CreatedBy
+	WHERE ( Id = @Id )
+
+	DECLARE @Err int
+	DECLARE @Result int
+	SET @Result = @@ROWCOUNT
+	SET @Err = @@ERROR 
+
+	If @Err <> 0 
+	BEGIN
+		SET @Result = -1
+	END
+
+	RETURN @Result
+GO
+
+/****** Object:  StoredProcedure [dbo].DeleteInvoiceDetail    Script Date: 2/14/2018 5:18:56 PM ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DeleteInvoiceDetail]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[DeleteInvoiceDetail]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE DeleteInvoiceDetail
+(
+	@Id int
+)
+AS
+	DELETE [dbo].[InvoiceDetail] 
+
+    WHERE ( Id = @Id )
+
+	DECLARE @Err int
+	DECLARE @Result int
+
+	SET @Result = @@ROWCOUNT
+	SET @Err = @@ERROR 
+
+	If @Err <> 0 
+	BEGIN
+		SET @Result = -1
+	END
+
+	RETURN @Result
+GO
+
+/****** Object:  StoredProcedure [dbo].GetAllInvoiceDetail    Script Date: 2/14/2018 5:18:56 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetAllInvoiceDetail]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetAllInvoiceDetail]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetAllInvoiceDetail
+AS
+	SELECT *		
+	FROM
+		[dbo].[InvoiceDetail]
+
+RETURN @@ROWCOUNT
+GO
+
+/****** Object:  StoredProcedure [dbo].GetInvoiceDetailById    Script Date: 2/14/2018 5:18:56 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetInvoiceDetailById]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetInvoiceDetailById]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetInvoiceDetailById
+(
+	@Id int
+)
+AS
+	SELECT *		
+	FROM
+		[dbo].[InvoiceDetail]
+	WHERE ( Id = @Id )
+
+RETURN @@ROWCOUNT
+GO
+
+/****** Object:  StoredProcedure [dbo].GetInvoiceDetailMaximumId    Script Date: 2/14/2018 5:18:56 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetInvoiceDetailMaximumId]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetInvoiceDetailMaximumId]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetInvoiceDetailMaximumId
+AS
+	DECLARE @Result int
+	SET @Result = 0
+	
+	SELECT @Result = MAX(Id) 		
+	FROM
+		[dbo].[InvoiceDetail]
+
+	If @Result > 0 
+		BEGIN
+			-- Everything is OK
+			RETURN @Result
+		END
+		ELSE
+		BEGIN
+			RETURN 0
+		END
+RETURN @Result
+GO
+
+/****** Object:  StoredProcedure [dbo].GetInvoiceDetailRowCount    Script Date: 2/14/2018 5:18:56 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetInvoiceDetailRowCount]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetInvoiceDetailRowCount]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetInvoiceDetailRowCount
+AS
+	DECLARE @Result int
+	SET @Result = 0
+	SELECT @Result = COUNT(*) 		
+	FROM
+		[dbo].[InvoiceDetail]
+		
+RETURN @Result
+GO
+
+/****** Object:  StoredProcedure [dbo].GetPagedInvoiceDetail    Script Date: 2/14/2018 5:18:56 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetPagedInvoiceDetail]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetPagedInvoiceDetail]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetPagedInvoiceDetail
+(
+	@TotalRows		int	OUTPUT,
+	@PageIndex	int,
+	@RowPerPage		int,
+	@WhereClause	nvarchar(4000),
+	@SortColumn		nvarchar(128),
+	@SortOrder		nvarchar(4)
+)
+AS
+BEGIN 
+
+SET @PageIndex = isnull(@PageIndex, -1)
+SET @RowPerPage = isnull(@RowPerPage, -1)
+SET @WhereClause = isnull(@WhereClause, '')
+SET @SortColumn = isnull(@SortColumn, '')
+SET @SortOrder = isnull(@SortOrder, '')
+SET @TotalRows = 0
+SET @RowPerPage = @RowPerPage -1
+DECLARE @SQL1 nvarchar(4000)
+DECLARE @SQL2 nvarchar(4000)
+
+IF (@WhereClause != '')
+BEGIN
+	SET @WhereClause = 'WHERE ' + char(13) + @WhereClause	
+END
+
+IF (@SortColumn != '')
+BEGIN
+	SET @SortColumn = 'ORDER BY ' + @SortColumn
+
+	IF (@SortOrder != '')
+	BEGIN
+		SET @SortColumn = @SortColumn + ' ' + @SortOrder
+	END
+END
+ELSE
+BEGIN
+	SET @SortColumn = @SortColumn + ' ORDER BY [Id] ASC'
+END
+
+SET @SQL1 = 'WITH InvoiceDetailEntries AS (
+			SELECT ROW_NUMBER() OVER ('+ @SortColumn +')AS Row,
+	[Id],
+	[InvoiceId],
+	[InventoryId],
+	[EquipmentId],
+	[EquipName],
+	[EquipDetail],
+	[CompanyId],
+	[BundleId],
+	[Quantity],
+	[UnitPrice],
+	[TotalPrice],
+	[CreatedDate],
+	[CreatedBy]
+				FROM 
+				[dbo].[InvoiceDetail]
+					'+ @WhereClause +'
+				)
+				SELECT 
+	[Id],
+	[InvoiceId],
+	[InventoryId],
+	[EquipmentId],
+	[EquipName],
+	[EquipDetail],
+	[CompanyId],
+	[BundleId],
+	[Quantity],
+	[UnitPrice],
+	[TotalPrice],
+	[CreatedDate],
+	[CreatedBy]
+				FROM 
+					InvoiceDetailEntries
+				WHERE 
+					Row between '+ CONVERT(nvarchar(10), (@PageIndex * @RowPerPage) + 1) +'And ('+ CONVERT(nvarchar(10), (@PageIndex * @RowPerPage) +@RowPerPage+ 1) +')'
+	
+
+SET @SQL2 =		' SELECT @TotalRows = COUNT(*) 
+				FROM 
+				[dbo].[InvoiceDetail] ' + @WhereClause
+								
+EXEC sp_executesql @SQL2, N'@TotalRows int output', @TotalRows = @TotalRows output
+
+EXEC sp_executesql @SQL1
+
+RETURN @@ROWCOUNT
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].GetInvoiceDetailByQuery    Script Date: 2/14/2018 5:18:56 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetInvoiceDetailByQuery]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetInvoiceDetailByQuery]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetInvoiceDetailByQuery
+(
+	@Query	nvarchar(4000)
+)
+AS
+BEGIN 
+
+SET @Query = isnull(@Query, '')
+DECLARE @SQL1 nvarchar(4000)
+
+IF (@Query != '')
+BEGIN
+	SET @Query = 'WHERE ' + char(13) + @Query	
+END
+
+SET @SQL1 =		'SELECT * 
+				FROM 
+				[dbo].[InvoiceDetail] ' + @Query
+								
+EXEC sp_executesql @SQL1
+
+RETURN @@ROWCOUNT
+END
+GO
+

@@ -1,0 +1,47 @@
+﻿using LLP.Entities;
+using LLP.Facade;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace LLP.Web.Controllers
+{
+    public class UserController : BaseController
+    {
+        // GET: User
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        public ActionResult DashBoard()
+        {
+            return View();
+        }
+        [HttpGet]
+        public ActionResult UserLogin()
+        {
+            UserLogin em = _Util.Facade.UserLoginFacade.GetAllUserName().Where(x => x.EmailAddress == Session["UserName"].ToString()).FirstOrDefault();
+
+            return View(em);
+        }
+
+        public JsonResult UpdateUser(UserLogin user)
+        {
+            bool result = false;
+            try
+            {
+                _Util.Facade.UserLoginFacade.UpdateUser(user);
+                result = true;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            // return RedirectToAction("Dashboard");
+            return Json(result);
+        }
+    }
+}

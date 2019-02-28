@@ -1,0 +1,122 @@
+﻿using LLP.Entities;
+using LLP.Facade;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace LLP.Web.Controllers
+{
+    public class AdminController : BaseController
+    {
+        // GET: Default
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        public ActionResult Dashboard()
+        {
+          
+            return View();
+        }
+        public ActionResult LoadChapterList()
+        {
+            List<Chapter> chapterList = new List<Chapter>();
+            List<ChapterContent> cpList = new List<ChapterContent>();
+            chapterList = _Util.Facade.ChapterFacade.GetAllChapterName();
+            cpList = _Util.Facade.ChapterContentFacade.GetAllChapterName();
+            BookChapter bk = new BookChapter();
+            bk.ChapterList = chapterList;
+            bk.ContentList = cpList;
+            return View(bk);
+        }
+        public ActionResult ChapterLIst()
+        {
+            return View(_Util.Facade.ChapterContentFacade.GetAllChapterName());
+        }
+        [HttpPost]
+        public JsonResult SaveChapter(Chapter chapter)
+        {
+            if (chapter.Id > 0)
+            {
+                _Util.Facade.ChapterFacade.UpdateChapter(chapter);
+             
+            }
+            else
+            {
+                _Util.Facade.ChapterFacade.InsertChapter(chapter);
+            }
+        
+
+           return Json(1);
+        }
+        public ActionResult ChpterContent()
+        {
+
+            return View();
+        }
+        [HttpGet]
+        public ActionResult CreateChapter(int? id)
+        {
+            Chapter chapter = new Chapter();
+            if(id.HasValue && id > 0)
+            {
+                //Get data using id
+                chapter = _Util.Facade.ChapterFacade.GetChapterById(id.Value);
+            }
+            return View(chapter);
+        }
+        /*[HttpPost]
+        public ActionResult CreateChapter(Chapter chapter)
+        {
+            if (chapter.Id > 0)
+            {
+                if (_Util.Facade.ChapterFacade.UpdateChapter(chapter) == true)
+                {
+                    ViewBag.Javascript = true;
+                }
+            }
+            else
+            {
+                if (_Util.Facade.ChapterFacade.InsertChapter(chapter) == true)
+                {
+                    ViewBag.Javascript = true;
+                }
+            }
+            return RedirectToAction("Dashboard");
+        }*/
+        public ActionResult Product()
+        {
+            return View();
+        }
+        public ActionResult EmployeeProfile()
+        {
+            Employee em;
+            em = _Util.Facade.EmployeeFacade.GetEmployeeById(5);
+            return View(em);
+        }
+        [HttpPost]
+        public JsonResult EmployeeProfile(Employee employee)
+        {
+            bool result = false;
+            try
+            {
+                _Util.Facade.EmployeeFacade.UpdateEmployee(employee);
+                result = true;
+            }
+            catch(Exception ex)
+            {
+
+            }
+           // return RedirectToAction("Dashboard");
+           return Json(result);
+        }
+        public ActionResult ShowChapterList()
+        {
+            return View(_Util.Facade.ChapterFacade.GetAllChapterName());
+        }
+
+    }
+}

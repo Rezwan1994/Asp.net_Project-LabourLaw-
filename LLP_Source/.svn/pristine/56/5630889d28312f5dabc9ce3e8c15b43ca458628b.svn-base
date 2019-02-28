@@ -1,0 +1,274 @@
+﻿@model LLP.Entities.ChapterContent
+@using Localize = LLP.Web.Ui.Helper.LanguageHelper
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CreateChapter</title>
+
+
+    <link href="~/Content/css/pnotify.css" rel="stylesheet" />
+    <link href="~/Content/css/pnotify.buttons.css" rel="stylesheet" />
+    <script src="~/Content/scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Content/tinymce/tinymce.min.js"></script>
+    <script src="~/Content/scripts/init-tinymce.js"></script>
+
+    <script src="~/Content/scripts/pnotify.js"></script>
+    <script src="~/Content/scripts/pnotify.buttons.js"></script>
+    <script src="~/Content/scripts/Validation.js"></script>
+
+    <script>
+
+        var scrollToErrorMessagePublic = function () {
+            if ($($(".required").get(0)).offset() != undefined) {
+                var topcal = $($(".required").get(0)).offset().top;
+                if (topcal == 0) {
+                    topcal = $($(".required").get(0)).position().top;
+                    topcal -= 40;
+                } else {
+                    topcal -= 180;
+                }
+                jQuery('html, body').animate({
+                    scrollTop: topcal
+                }, 1000);
+            }
+        }
+        $(document).ready(function () {
+
+            $('#btnSaveContent').click(function () {
+                if (CommonUiValidation()) {
+                    var content = {};
+                    var resourceTitle = {};
+                    var resourceContent = {};
+             
+
+                    content.Id = $("#Id").val();
+                    content.TitleNo = $("#txtTitleNo").val();
+                    content.Title = $("#txtTitle").val();
+
+                    content.ChapterId = $("#txtChapter").val();
+                    content.ParentId = parseInt($("#txtParent").val());
+                    var cpn = tinymce.get("txtContent").getContent();
+                    content.CpContent = cpn;
+                    var cpnbangla = tinymce.get("txtContentbangla").getContent();
+              
+                     
+                    resourceTitle.ResourceName = $("#txtTitle").val();
+                    resourceTitle.ResourceValue = $("#txtTitlebangla").val();
+                    resourceContent.ResourceName = cpn;
+                    resourceContent.ResourceValue = cpnbangla;
+                    var param = JSON.stringify({
+                        resourceTitle: resourceTitle,
+                        resourceContent: resourceContent,
+                        content: content,
+            
+                    
+                    });
+              
+                 
+                    $.ajax({
+                        type: "POST",
+                        url: "/Admin/SaveContent",
+                        data: param,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        cache: false,
+                        success: function (response) {
+                            $("#txtTitleNo").val('');
+                            $("#txtTitle").val('');
+                            $("#txtChapter").val('');
+                            $("#txtParent").val('');
+                            $("#txtContent").val('');
+                            if (response == true) {
+                                new PNotify({
+                                    title: 'Saved Successfully',
+                                    text: 'The Content is saved...',
+                                    type: 'success',
+                                    styling: 'bootstrap3'
+                                });
+                            }
+                            else {
+                                new PNotify({
+                                    title: 'Saved Successfully',
+                                    text: 'The Content is saved...',
+                                    type: 'error',
+                                    styling: 'bootstrap3'
+                                });
+                            }
+
+
+                            //window.location.reload();
+                        }
+                    });
+
+              
+
+
+                }
+                else {
+                    scrollToErrorMessagePublic();
+                }
+
+        });
+
+        });
+    </script>
+    <script>
+    $(function () {
+        $(".pre_load").fadeOut(2000, function () {
+            $(".content").fadeIn(1000)
+        });
+    });
+    </script>
+    <style>
+        .content {
+            display: none;
+        }
+
+        .pre_load img {
+            width: 12pc;
+            padding-top: 288px;
+            display: block;
+            margin-left: 25pc;
+        }
+    </style>
+</head>
+<body>
+    <div class="pre_load">
+        <img src="~/Content/images/tenor.gif" />
+    </div>
+    <div class="content">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Chapter Content<small>Contents of chapters</small></h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li>
+                                <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+
+                            <li>
+                                <a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <br />
+                        <div data-parsley-validate class="form-horizontal form-label-left">
+
+
+
+                            @Html.HiddenFor(m => m.Id)
+
+
+
+                            <div class="form-group">
+                                <p class="control-label col-md-3 col-sm-3 col-xs-12">
+                                    Title No <span class="required">*</span>
+                                </p>
+                                <label class="label hidden red-color cus-label" rel="titleNo" style="color:red;">*This Field is Required</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" name="titleNo" id="txtTitleNo" datarequired="true" value="@Model.TitleNo" required="required" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <p class="control-label col-md-3 col-sm-3 col-xs-12">
+                                    Title <span class="required">*</span>
+                                </p>
+                                <label class="label hidden red-color cus-label" rel="title" style="color:red;">*This Field is Required</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" datarequired="true" id="txtTitle" value="@Model.Title" required="required" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <p class="control-label col-md-3 col-sm-3 col-xs-12">
+                                    টাইটেল <span class="required">*</span>
+                                </p>
+                                <label class="label hidden red-color cus-label" rel="title" style="color:red;">*This Field is Required</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" datarequired="true" id="txtTitlebangla" value="@Model.Title" required="required" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Content</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    @if (Model.CpContent != null)
+                                    {
+                                        <textarea id="txtContent" value="" class="tinymce">@Localize.English(Model.CpContent)</textarea>
+                                    }
+                                    else
+                                    {
+                                        <textarea id="txtContent" value="" class="tinymce"></textarea>
+                                    }
+
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">কন্টেন্ট</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    @if (Model.CpContent != null)
+                                    {
+                                        <textarea id="txtContentbangla" value="" class="tinymce">@Localize.Bangla(Model.CpContent)</textarea>
+                                    }
+                                    else
+                                    {
+                                        <textarea id="txtContentbangla" value="" class="tinymce"></textarea>
+                                    }
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                                    Chapter Id <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    @Html.DropDownListFor(model => model.ChapterId, (IEnumerable<SelectListItem>)ViewBag.contents, new { @class = "form-control col-md-7 col-xs-12", @id = "txtChapter" })
+
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                                    Parent Id <span class="required">*</span>
+                                </label>
+                                
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    @Html.DropDownListFor(model => model.ParentId, (IEnumerable<SelectListItem>)ViewBag.titles, new { @class = "form-control col-md-7 col-xs-12", @id = "txtParent"   })
+
+                                </div>
+
+                            </div>
+
+                            <div class="ln_solid"></div>
+                            <div class="form-group">
+                                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                    <button class="btn btn-primary" type="button">Cancel</button>
+                                    <button class="btn btn-primary" type="reset">Reset</button>
+
+                                    <button id="btnSaveContent" class="btn btn-success ">
+                                        Save
+                                    </button>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+
+</body>
+</html>
+

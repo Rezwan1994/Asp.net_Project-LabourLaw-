@@ -1,0 +1,228 @@
+﻿@model LLP.Web.BookChapter
+@{
+    Layout = "~/Views/Shared/_llpLayout.cshtml";
+
+}
+ <!--/.header-->
+
+<link href="~/Content/css/book.css" rel="stylesheet" />
+<div class="Chapter">
+    @*<div class="container">*@
+
+
+    <div class="constant">
+        <div class="container" id="sidescroll">
+            <div class="row" >
+                <div class="col-md-2 col-sm-3 col-xs-4">
+                 
+                    <div id="sticker">
+                        <input type="text" id="search" onkeyup="myFunction()" placeholder="Search In your book..">
+                        <div class="scrollbar scrollbar-primary">
+                            <div class="Chapter_List">
+
+                                <div style="padding:10px; ">
+                                    <div class="treeview" id="myTable">
+                                    
+                                         @foreach (var a in Model.ChapterList.Where(x => x.Type == "Rule"))
+                                         {
+                                             <div class="search_row">
+                                                <h4 id="txtChapt">@a.Name</h4>
+                                             
+                                                 <div class="search_content">
+                                                     @if (Model.ContentList != null && Model.ContentList.Count() > 0)
+                                                     {
+
+                                                         <ul class="ChapterName" id="txtChaptername">
+                                                             @TreeView.GetTreeView(Model.ContentList, Model.ContentList.FirstOrDefault().ParentId, Convert.ToInt32(a.ChapterNo))
+
+                                                         </ul>
+                                                     }
+                                                 </div>
+                                               
+                                             </div>
+                                          
+
+                                         }
+                                     
+                                      
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 col-sm-8 col-xs-8">
+                    <h3 style="margin-left:15px;">Bangladesh Labour Rule</h3>
+                    <div class="Chapter_Content" id="cpcontent">
+
+
+                    </div>
+
+                </div>
+               
+            </div>
+        </div>
+    </div>
+    
+
+</div>
+
+<script src="~/Content/scripts/jquery.min.js"></script>
+
+<script>
+
+   
+
+
+
+
+
+    var myFunction = function(){
+  
+   
+        var input, filter, table, tr, td, i;
+        input = document.getElementById("search");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+
+  
+        tr = table.getElementsByClassName("ChapterName");
+
+        for (i = 0; i < tr.length; i++) {
+            tdlength = $('.' + tr[0].className).children().length
+            for (j = 0; j < tdlength; j++)
+            {
+                td = $('.' + tr[i].className).children().children().children()[j].innerHTML;
+              
+                if (td) {
+                    if (td.toUpperCase().indexOf(filter) > -1) {
+                        $('.' + tr[i].className).children().children().children()[j].style.visibility = "visible";
+                       // $('.' + tr[i].className).children().children().children()[j].style.display = "block";
+                       // table.style.display = "block";
+                        tr[i].style.display = "";
+                        console.log(td);
+                    } else {
+                        $('.' + tr[i].className).children().children().children()[j].style.visibility = "hidden";
+                       
+                    }
+                    //if (filter.length == 0) {
+                    //    table.style.display = "none";
+                    //    tab.style.display = "none";
+                    //}
+                }
+            }
+          
+        }
+    }
+    
+
+
+
+
+
+
+
+
+    $(document).ready(function () {
+        $(".treeview li>ul").css('display', 'none'); // Hide all 2-level ul
+        $(".collapsible").click(function (e) {
+            e.preventDefault();
+            $(this).toggleClass("collapse expand");
+            $(this).closest('li').children('ul').slideToggle();
+        });
+
+
+
+        $(".title").click(function (item) {
+            var clickitem = $(item.target).attr('data-location');
+            $(".Chapter_Content").load(clickitem);
+        })
+
+
+
+
+
+
+        $(".ContentTitle").click(function (item) {
+            var clickitem1 = $(item.target).attr('data-location');
+
+            $(".Chapter_Content").load(clickitem1);
+        })
+
+
+
+
+
+
+
+
+        @*$("input").keyup(function () {
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("SearchInbook", "Home")',
+                dataType: "json",
+                data: { search: $("#search").val() },
+                success: function (data) {
+                    $('#cpcontent').html("");
+                    //'<br>';
+                    // console.log(data);
+                    var suggestionlist = '';
+
+                    for (var sterm = 0; sterm < data.length; sterm++) {
+
+                        var item = data[sterm];
+                        $('#searchSuggestion').show();
+                        suggestionlist += ('<p class="chapter" data-location="/Home/ShowContentbyTitle?Title=' + encodeURIComponent(item) + '" onclick="myFunction(this)" item="' + item + '" >' + data[sterm] + '</p>');
+                        // suggestionlist += ('<a class="ContentTitle" onclick="LinkAssign(this)" item="' + gurl+'" >' + data[sterm]+ '</a> <br>');
+
+                    }
+                    $('#searchSuggestion').html('<div class="forborder">' + suggestionlist + '</div>');
+
+                },
+                error: function (xhr, status, error) {
+                    alert("Error");
+                }
+            });
+
+
+        })*@
+
+
+
+
+        var s = $("#sticker");
+        var h = $("headersticker");
+        var pos = s.position();
+        $(window).scroll(function () {
+            var windowpos = $(window).scrollTop();
+            console.log(windowpos + " " + pos);
+            if (windowpos > pos.top) {
+                s.addClass("stick");
+                h.addClass("headerstick");
+            } else if (windowpos == 0) {
+                console.log("dfgdfg");
+                s.removeClass("stick");
+            }
+        });
+
+
+
+        //var myFunction = function (item) {
+        //    //var clickitem1 = $(item.target).attr('data-location');data-location='+gurl+'
+        //    //  encodeURIComponent(_href))
+        //    var value = $(item).attr("item");
+        //    var clickitem = $(item).attr('data-location');
+        //    // alert(clickitem);
+        //    $('#searchSuggestion').html("");
+        //    $(".Chapter_Content").load(clickitem);
+        //    // alert(value);
+        //    //$(".Chapter_Content").load(clickitem1);
+        //    // data - location="/Home/ShowContentbyTitle?Title=value";
+
+        //}
+    });
+      //
+
+</script>

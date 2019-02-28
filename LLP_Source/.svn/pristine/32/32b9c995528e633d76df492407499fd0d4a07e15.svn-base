@@ -1,0 +1,73 @@
+﻿@model IEnumerable<LLP.Entities.PermissionGroup>
+
+@{
+    Layout = null;
+}
+
+
+<table id="datatable" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Group Permission</th>
+            <th>Action</th>
+
+
+        </tr>
+
+
+    </thead>
+
+
+    <tbody>
+        @{
+            foreach (var i in Model)
+            {
+                <tr>
+                    <td>@i.Name</td>
+                    <td><a href="#" id="myBtn" onclick="myFunction('@i.Id')">Change</a></td>
+                    <td><a>Delete</a></td>
+                </tr>
+
+            }
+        }
+
+
+    </tbody>
+
+</table>
+<div id="PartialViewLoad"></div>
+<input type="hidden" name="name" value="" id="userid" />
+
+
+<script>
+
+    var myFunction = function(item){
+
+
+        id = item;
+        console.log(id);
+        $("#userid").val(id);
+        $("#PartialViewLoad").load("/Admin/PertialPermission", { parmissionId: id });
+       
+    }
+
+        //$("tbody tr td #myBtn").click(function () {
+
+        //    $("#myModal").css("display", "block");
+        //})
+
+
+
+
+          // Hide all 2-level ul
+        console.log($("#permissionChack").val());
+        //if ($(".permissionChack").value() == 101)
+        //{
+        //    currentchckbox.prop('checked', true);
+        //}
+
+
+
+
+</script>

@@ -1,0 +1,74 @@
+﻿@model LLP.Web.BookChapter
+@using Localize = LLP.Web.Ui.Helper.LanguageHelper
+@{
+    Layout = "~/Views/Shared/_llpLayout.cshtml";
+
+}
+<!--/.header-->
+<link href="~/Content/css/perfect-scrollbar.css" rel="stylesheet" />
+<link href="~/Content/css/book.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css?family=Do+Hyeon" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
+<style>
+    #partial_View {
+        float: left;
+        height: 500px;
+        width: 250px;
+        margin-bottom: 25px;
+        overflow: auto;
+        position: relative;
+    }
+
+    .content_wrapper {
+        margin-left: 25px;
+        width: 85%;
+    }
+    #border {
+        width: 21%;
+        border-right: 1px solid #A6A6A6;
+        height: 603px;
+    }
+</style>
+
+<div class="Chapter">
+    @*<div class="container">*@
+
+
+    <div class="constant">
+        <div class="container" id="sidescroll">
+            <div class="row">
+                <div class="col-md-2 col-sm-3 col-xs-4" id="border">
+
+                    <div id="sticker">
+                        <input type="text" id="search" placeholder="Search In your book..">
+                        <div class="scrollbar scrollbar-primary" id="partial_View">
+                          
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 col-sm-8 col-xs-8" id="right_content">
+                    <div class="content_wrapper">
+                        <h3 style="text-align:center;font-family: 'Do Hyeon', sans-serif;">Bangladesh Labour Act</h3>
+                        <div class="Chapter_Content" id="cpcontent">
+                            <h2>Introduction</h2>
+
+                            Labour law (or “labor”, or “employment” law) is the body of laws, administrative rulings, and precedents which address the legal rights of, and restrictions on, working people and their organizations. As such, it mediates many aspects of the relationship between trade unions, employers and employees. In Canada, employment laws related to unionized workplaces are differentiated from those relating to particular individuals. In most countries however, no such distinction is made. However, there are two broad categories of labour law. First, collective labour law relates to the tripartite relationship between employee, employer and union. Second, individual labour law concerns employees’ rights at work and through the contract for work. The labour movement has been instrumental in the enacting of laws protecting labour rights in the 19th and 20th centuries. Labour rights have been integral to the social and economic development since the industrial revolution.
+
+                            Labour law arose due to the demands for workers for better conditions, the right to organize, and the simultaneous demands of employers to restrict the powers of workers’ many organizations and to keep labour costs low. Employers’ costs can increase due to workers organizing to win higher wages, or by laws imposing costly requirements, such as health and safety or equal opportunities conditions. Workers’ organizations, such as trade unions, can also transcend purely industrial disputes, and gain political power – which some employers may oppose. The state of labour law at any one time is therefore both the product of, and a component of, struggles between different interests in society.
+
+                        </div>
+                    </div>
+                  
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script src="~/Content/scripts/jquery.min.js"></script>
+<script src="~/Content/scripts/perfect-scrollbar.js"></script>
+<script src="~/Content/scripts/ActChapter.js"></script>

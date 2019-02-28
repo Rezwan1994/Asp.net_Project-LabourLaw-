@@ -1,0 +1,388 @@
+﻿using LLP.Entities;
+using LLP.Facade;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace LLP.Web.Controllers
+{
+    public class AdminController : BaseController
+    {
+        // GET: Default
+       
+
+        public ActionResult Dashboard()
+        {
+            if (Session["UserName"] == null)
+            {
+          
+                return RedirectToAction("Login","Home");
+            }
+            return View();
+
+        }
+        public ActionResult LoadChapterList()
+        {
+            List<Chapter> chapterList = new List<Chapter>();
+            List<ChapterContent> cpList = new List<ChapterContent>();
+            chapterList = _Util.Facade.ChapterFacade.GetAllChapterName();
+            cpList = _Util.Facade.ChapterContentFacade.GetAllChapterName();
+            BookChapter bk = new BookChapter();
+            bk.ChapterList = chapterList;
+            bk.ContentList = cpList;
+            return View(bk);
+        }
+        public ActionResult ActChapterList()
+        {
+            List<Chapter> chapterList = new List<Chapter>();
+            List<ChapterContent> cpList = new List<ChapterContent>();
+            chapterList = _Util.Facade.ChapterFacade.GetAllChapterName();
+            cpList = _Util.Facade.ChapterContentFacade.GetAllChapterName();
+            BookChapter bk = new BookChapter();
+            bk.ChapterList = chapterList;
+            bk.ContentList = cpList;
+            return View(bk);
+        }
+        public ActionResult ChapterLIst()
+        {
+            return View(_Util.Facade.ChapterContentFacade.GetAllChapterName());
+        }
+
+     
+   
+        public JsonResult SaveChapter(Chapter chapter)
+        {
+            bool result = false;
+            try
+            {
+                if (chapter.Id > 0)
+                {
+                    _Util.Facade.ChapterFacade.UpdateChapter(chapter);
+
+                }
+                else
+                {
+
+                    _Util.Facade.ChapterFacade.InsertChapter(chapter);
+                }
+                result = true;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            // return RedirectToAction("Dashboard");
+            return Json(result);
+
+        }
+
+
+        public JsonResult SaveContent(LocalizeResource resourceTitle, LocalizeResource resourceContent, ChapterContent Content)
+        {
+            bool result = false;
+            try
+            {
+                if (Content.Id > 0)
+                {
+                    ChapterContent cp = _Util.Facade.ChapterContentFacade.GetAllChapterName().Where(x => x.Id == Content.Id).FirstOrDefault();
+                    List<LocalizeResource> lr =  _Util.Facade.ResourceFacade.GetAllResourceName().Where(x => x.ResourceName == cp.CpContent).ToList();
+                    LocalizeResource l1 = lr.Where(x => x.LanguageId == 2).FirstOrDefault();
+                    l1.ResourceValue  = resourceContent.ResourceValue;
+                    _Util.Facade.ResourceFacade.UpdateResource(l1);
+                    LocalizeResource l2 = lr.Where(x => x.LanguageId == 1).FirstOrDefault();
+                    l2.ResourceValue  = resourceContent.ResourceName;
+                    _Util.Facade.ResourceFacade.UpdateResource(l2);
+                    Content.CpContent = cp.CpContent;
+                    Content.ChapterId = cp.ChapterId;
+                    _Util.Facade.ChapterContentFacade.UpdateChapter(Content);
+
+                }
+                else
+                {
+                    resourceTitle.CompanyId = Guid.NewGuid();
+                    resourceTitle.LanguageId = 2;
+                    LocalizeResource rr = new LocalizeResource();
+                    rr.CompanyId = Guid.NewGuid();
+                    rr.ResourceName = Guid.NewGuid().ToString();
+                    rr.ResourceValue = resourceTitle.ResourceName;
+                    rr.LanguageId = 1;
+                    _Util.Facade.ResourceFacade.InsertLocalizeResource(resourceTitle);
+                    _Util.Facade.ResourceFacade.InsertLocalizeResource(rr);
+                    resourceTitle.ResourceName = rr.ResourceName;
+                    _Util.Facade.ResourceFacade.UpdateResource(resourceTitle);
+                    resourceContent.CompanyId = Guid.NewGuid();
+                    resourceContent.LanguageId = 2;
+                    LocalizeResource rr1 = new LocalizeResource();
+                    rr1.CompanyId = Guid.NewGuid();
+                    rr1.ResourceName = Guid.NewGuid().ToString();
+                    rr1.ResourceValue = resourceContent.ResourceName;
+                    rr1.LanguageId = 1;
+                    _Util.Facade.ResourceFacade.InsertLocalizeResource(resourceContent);
+                    _Util.Facade.ResourceFacade.InsertLocalizeResource(rr1);
+                    resourceContent.ResourceName = rr1.ResourceName;
+                    _Util.Facade.ResourceFacade.UpdateResource(resourceContent);
+                    LocalizeResource lr  = _Util.Facade.ResourceFacade.GetAllResourceName().Where(x => x.ResourceValue == Content.CpContent).FirstOrDefault();
+                    Content.CpContent = lr.ResourceName;
+                    _Util.Facade.ChapterContentFacade.InsertChapter(Content);
+                }
+                if(HttpRuntime.Cache!=null && HttpRuntime.Cache["LanguagePack"] != null)
+                {
+                    HttpRuntime.Cache.Remove("LanguagePack");
+                }
+                result = true;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            // return RedirectToAction("Dashboard");
+            return Json(result);
+
+         
+        }
+
+    
+
+
+        public ActionResult ChpterContent()
+        {
+
+            return View();
+        }
+
+     
+
+
+        [HttpGet]
+        public ActionResult CreateChapter(int? id)
+        {
+       
+
+            Chapter chapter = new Chapter();
+            if(id.HasValue && id > 0)
+            {
+                //Get data using id
+                chapter = _Util.Facade.ChapterFacade.GetChapterById(id.Value);
+            }
+            return View(chapter);
+        }
+
+        public ActionResult CreateChapter2(int? id)
+        {
+
+
+            Chapter chapter = new Chapter();
+            if (id.HasValue && id > 0)
+            {
+                //Get data using id
+                chapter = _Util.Facade.ChapterFacade.GetChapterById(id.Value);
+            }
+            return View(chapter);
+        }
+
+        public ActionResult CreateCpContent(int? id)
+        {
+
+            List<SelectListItem> cpList = new List<SelectListItem>();
+            foreach (Chapter cp in _Util.Facade.ChapterFacade.GetAllChapterName().Where(x => x.Type == "Rule"))
+            {
+                SelectListItem option = new SelectListItem();
+                option.Text = cp.Name;
+                option.Value = cp.ChapterNo.ToString();
+
+                cpList.Add(option);
+            }
+
+            // sending the list to view through ViewBag
+            ViewBag.contents = cpList;
+            ChapterContent content = new ChapterContent();
+            if (id.HasValue && id > 0)
+            {
+                //Get data using id
+                content = _Util.Facade.ChapterContentFacade.GetChapterById(id.Value);
+            }
+            return View(content);
+        }
+
+        public ActionResult CreateCpContent2(int? id)
+        {
+
+            List<SelectListItem> cpList = new List<SelectListItem>();
+            foreach (Chapter cp in _Util.Facade.ChapterFacade.GetAllChapterName().Where(x => x.Type == "Act"))
+            {
+                SelectListItem option = new SelectListItem();
+                option.Text = cp.Name;
+                option.Value = cp.ChapterNo.ToString();
+
+                cpList.Add(option);
+            }
+
+            // sending the list to view through ViewBag
+            ViewBag.contents = cpList;
+            ChapterContent content = new ChapterContent();
+            if (id.HasValue && id > 0)
+            {
+                //Get data using id
+                content = _Util.Facade.ChapterContentFacade.GetChapterById(id.Value);
+            }
+            return View(content);
+        }
+
+        public ActionResult Product()
+        {
+            return View();
+        }
+        [HttpGet]
+        public ActionResult EmployeeProfile()
+        {
+            UserLogin em = _Util.Facade.UserLoginFacade.GetAllUserName().Where(x => x.EmailAddress == Session["UserName"].ToString()).FirstOrDefault();
+     
+            return View(em);
+        }
+ 
+        public JsonResult EmployeeProfile(Employee employee)
+        {
+            bool result = false;
+            try
+            {
+                _Util.Facade.EmployeeFacade.UpdateEmployee(employee);
+                result = true;
+            }
+            catch(Exception ex)
+            {
+
+            }
+           // return RedirectToAction("Dashboard");
+           return Json(result);
+        }
+        public ActionResult ShowChapterList()
+        {
+            return View(_Util.Facade.ChapterFacade.GetAllChapterName());
+        }
+        public ActionResult ShowChapterList2()
+        {
+            return View(_Util.Facade.ChapterFacade.GetAllChapterName());
+        }
+        public ActionResult ShowContentList()
+        {
+            return View();
+
+        }
+        public ActionResult PartialShowContentList(int? PageNumber,int? UnitPerPage,string SearchText)
+        {
+            ViewBag.OutOfNumber = _Util.Facade.ChapterContentFacade.GetContentCountRule().Count;
+            List<ChapterContent> ChapterContentList = _Util.Facade.ChapterContentFacade.GetAllChapterContent( Convert.ToInt32(PageNumber), Convert.ToInt32(UnitPerPage), SearchText);
+
+            if ((int)ViewBag.OutOfNumber == 0)
+            {
+                ViewBag.Message = "No Content Available !";
+            }
+            if (PageNumber == null || PageNumber == 0)
+            {
+                PageNumber = 1;
+            }
+            if (!UnitPerPage.HasValue || UnitPerPage.Value < 10)
+            {
+                UnitPerPage = 10;
+            }
+            if (@ViewBag.OutOfNumber == 0)
+            {
+                PageNumber = 1;
+            }
+            ViewBag.PageNumber = PageNumber;
+
+            if ((int)ViewBag.PageNumber * UnitPerPage > (int)ViewBag.OutOfNumber)
+            {
+                ViewBag.CurrentNumber = (int)ViewBag.OutOfNumber;
+            }
+            else
+            {
+                ViewBag.CurrentNumber = (int)ViewBag.PageNumber * UnitPerPage;
+            }
+
+            ViewBag.PageCount = Math.Ceiling((double)ViewBag.OutOfNumber / UnitPerPage.Value);
+
+            List<Chapter> chapterList = new List<Chapter>();
+            List<ChapterContent> cpList = new List<ChapterContent>();
+            chapterList = _Util.Facade.ChapterFacade.GetAllChapterName();
+            BookChapter bk = new BookChapter();
+            bk.ChapterList = chapterList;
+            bk.ContentList = ChapterContentList;
+            return PartialView(bk);
+        }
+
+        public ActionResult ShowContentList2()
+        {
+
+            return View();
+        }
+
+        public ActionResult PartialShowContentList2(int? PageNumber, int? UnitPerPage, string SearchText)
+        {
+            ViewBag.OutOfNumber = _Util.Facade.ChapterContentFacade.GetContentCountAct().Count;
+            List<ChapterContent> ChapterContentList = _Util.Facade.ChapterContentFacade.GetAllChapterContentAct(Convert.ToInt32(PageNumber), Convert.ToInt32(UnitPerPage), SearchText);
+
+            if ((int)ViewBag.OutOfNumber == 0)
+            {
+                ViewBag.Message = "No Content Available !";
+            }
+            if (PageNumber == null || PageNumber == 0)
+            {
+                PageNumber = 1;
+            }
+            if (!UnitPerPage.HasValue || UnitPerPage.Value < 10)
+            {
+                UnitPerPage = 10;
+            }
+            if (@ViewBag.OutOfNumber == 0)
+            {
+                PageNumber = 1;
+            }
+            ViewBag.PageNumber = PageNumber;
+
+            if ((int)ViewBag.PageNumber * UnitPerPage > (int)ViewBag.OutOfNumber)
+            {
+                ViewBag.CurrentNumber = (int)ViewBag.OutOfNumber;
+            }
+            else
+            {
+                ViewBag.CurrentNumber = (int)ViewBag.PageNumber * UnitPerPage;
+            }
+
+            ViewBag.PageCount = Math.Ceiling((double)ViewBag.OutOfNumber / UnitPerPage.Value);
+
+            List<Chapter> chapterList = new List<Chapter>();
+            List<ChapterContent> cpList = new List<ChapterContent>();
+            chapterList = _Util.Facade.ChapterFacade.GetAllChapterName();
+            BookChapter bk = new BookChapter();
+            bk.ChapterList = chapterList;
+            bk.ContentList = ChapterContentList;
+            return PartialView(bk);
+        }
+
+        public ActionResult ShowChapterContent(int id)
+        {
+            return View(_Util.Facade.ChapterContentFacade.GetChapterById(id));
+        }
+
+
+
+       
+        public ActionResult AdminChat()
+        {
+            return View();
+        }
+        [HttpGet]
+        public JsonResult GetAllUserFromUserChat()
+        {
+            List<ChatUser> alluser = new List<ChatUser>();
+            alluser=_Util.Facade.chatFacade.GetAllChatUserName().ToList();
+           
+
+            return Json(alluser, JsonRequestBehavior.AllowGet);
+        }
+
+    }
+}

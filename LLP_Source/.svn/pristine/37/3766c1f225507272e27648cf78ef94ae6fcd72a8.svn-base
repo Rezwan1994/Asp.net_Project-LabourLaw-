@@ -1,0 +1,54 @@
+﻿using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using LLP.Framework;
+using LLP.Framework.Exceptions;
+using LLP.Entities;
+using LLP.Entities.Bases;
+using LLP.Entities.List;
+using System.Collections.Generic;
+
+namespace LLP.DataAccess
+{
+	public partial class UserPermissionDataAccess
+	{
+            public bool IsPermitted(int Id, string UserId)
+            {
+                List<UserPermission> permission = new List<UserPermission>();
+                string SqlQuery = @"Select * into #FilterPermission from(
+                                Select PGM.permissionId from PermissionGroupMap PGM
+                                LEFT JOIN UserPermission UP ON UP.PermissionGroupId = PGM.PermissionGroupId
+                                WHERE UserName='" + UserId + @"' 
+                                Union
+                                Select PermissionId from UserPermission
+                                where UserName='" + UserId + @"' AND PermissionId is NOT NULL) #FilterPermission
+                                Select * from #FilterPermission where PermissionId in('" + Id + @"')
+                                Drop Table #FilterPermission";
+
+                using (SqlCommand cmd = GetSQLCommand(SqlQuery))
+                {
+                    DataSet dsResult = GetDataSet(cmd);
+                    DataTable dt = dsResult.Tables[0];
+                    try
+                    {
+                        permission = (from DataRow dr in dt.Rows
+                                      select new UserPermission()
+                                      {
+                                          PermissionId = dr.ToIntDataRow("PermissionId")
+                                      }).ToList();
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
+                }
+
+                if (permission.Count != 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+    }	

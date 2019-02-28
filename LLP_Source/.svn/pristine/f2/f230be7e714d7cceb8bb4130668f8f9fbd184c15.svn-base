@@ -1,0 +1,63 @@
+﻿@using Localize = LLP.Web.Ui.Helper.LanguageHelper
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_llpLayout</title>
+    <link href="~/Content/css/LayoutStyle.css" rel="stylesheet" />
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+ 
+</head>
+<body>
+    <div class="navbar navbar-default navbar-static-top" >
+        <div class="container" id="menu">
+            <button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <div class="collapse navbar-collapse navHeaderCollapse" >
+                <ul class="nav navbar-nav navbar-right">
+                    <li> <a href="/Home/Index">@Localize.T("Home")</a></li>
+                    <li> <a href="">@Localize.T("Blog")</a></li>
+                    <li> <a href="/Home/Registration">@Localize.T("Sign up")</a></li>
+                    <li> <a href="/Home/Login">@Localize.T("Login")</a></li>
+                    @if(Request.Cookies["__Lng"] != null)
+                    {
+                        if (Request.Cookies["__Lng"].Value != "En-US")
+                        {
+                            <li class="career-advice tld">
+                                @Html.ActionLink("English", "English", "Home", new { area = "" }, new { @class = "gtmHeaderNav header-block-link", title = "English" })
+                            </li>
+                        }
+                        else if (Request.Cookies["__Lng"].Value != "Bn-BGD")
+                        {
+                            <li class="career-advice tld">
+                                @Html.ActionLink("বাংলা", "Bangla", "Home", new { area = "" }, new { @class = "gtmHeaderNav header-block-link", title = "English", @hidden = "hidden" })
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="career-advice tld">
+                            @Html.ActionLink("বাংলা", "Bangla", "Home", new { area = "" }, new { @class = "gtmHeaderNav header-block-link", title = "English", @hidden = "hidden" })
+                        </li>
+                    }
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div>
+        @RenderBody()
+    </div>
+    <script src="~/Content/scripts/jquery.min.js"></script>
+    <script src="~/Content/scripts/bootstrap.min.js"></script>
+
+</body>
+</html>

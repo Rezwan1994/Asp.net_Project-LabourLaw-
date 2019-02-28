@@ -1,0 +1,118 @@
+﻿using LLP.DataAccess;
+using LLP.Entities;
+using LLP.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace LLP.Facade
+{
+   public class PermissionFacade : BaseFacade
+    {
+        public PermissionFacade(ClientContext clientContext)
+            : base(clientContext)
+        {
+
+        }
+        PermissionDataAccess _PermissionDataAccess
+        {
+            get
+            {
+                return (PermissionDataAccess)_ClientContext[typeof(PermissionDataAccess)];
+            }
+        }
+        UserPermissionDataAccess _UserPermissionDataAccess
+        {
+            get
+            {
+                return (UserPermissionDataAccess)_ClientContext[typeof(UserPermissionDataAccess)];
+            }
+        }
+
+        PermissionGroupDataAccess _PermissionGroupDataAccess
+        {
+            get
+            {
+                return (PermissionGroupDataAccess)_ClientContext[typeof(PermissionGroupDataAccess)];
+            }
+        }
+        PermissionGroupMapDataAccess _PermissionGroupMapDataAccess
+        {
+            get
+            {
+                return (PermissionGroupMapDataAccess)_ClientContext[typeof(PermissionGroupMapDataAccess)];
+            }
+        }
+
+
+        public bool InsertPermission(Permission permission)
+        {
+            return _PermissionDataAccess.Insert(permission) > 0;
+        }
+        public bool UpdatePermission(Permission permission)
+        {
+            return _PermissionDataAccess.Update(permission) > 0;
+        }
+        public bool DeletePermission(int id)
+        {
+            return _PermissionDataAccess.Delete(id) > 0;
+        }
+        public Permission GetPermissionById(int id)
+        {
+            return _PermissionDataAccess.Get(id);
+        }
+        public Permission GetPermissionName(string PermissionName)
+        {
+
+            string query = string.Format(" UserName ='{0}'", PermissionName);
+            return _PermissionDataAccess.GetByQuery(query).FirstOrDefault();
+        }
+
+        public List<Permission> GetAllPermissionName()
+        {
+
+            return _PermissionDataAccess.GetAll();
+        }
+        public bool IsPermitted(int Id , Guid userId)
+        {
+            return _UserPermissionDataAccess.IsPermitted(Id, userId);
+        }
+        public bool InsertUserPermission(UserPermission permission)
+        {
+            return _UserPermissionDataAccess.Insert(permission) > 0;
+        }
+        public List<PermissionGroup> GetAllPermissionGroup()
+        {
+
+            return _PermissionGroupDataAccess.GetAll();
+        }
+        public List<PermissionGroupMap> GetAllPermissionGroupMap()
+        {
+
+            return _PermissionGroupMapDataAccess.GetAll();
+        }
+        public PermissionGroupMap GetPermissionGroupMapById(int id)
+        {
+
+            return _PermissionGroupMapDataAccess.Get(id);
+        }
+        public bool InsertPermissionGroupMap(PermissionGroupMap permissionGroupMap)
+        {
+
+            return _PermissionGroupMapDataAccess.Insert(permissionGroupMap)> 0;
+        }
+        public bool DeletePermissionGroupMap(int id)
+        {
+
+            return _PermissionGroupMapDataAccess.Delete(id) > 0;
+        }
+
+        public List<Permission> GetChackedParmission(int parmissionId)
+        {
+
+            return _UserPermissionDataAccess.GetChackedParmission(parmissionId);
+        }
+    }
+}

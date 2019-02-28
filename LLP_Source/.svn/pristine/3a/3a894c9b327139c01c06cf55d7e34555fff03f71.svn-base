@@ -1,0 +1,21 @@
+﻿@model LLP.Entities.ChapterContent
+@using Localize = LLP.Web.Ui.Helper.LanguageHelper
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <style>
+
+    </style>
+</head>
+<body>
+    <div>
+       <h3>@Html.Raw(Localize.T(( Model.CpContent)))</h3>
+    </div>
+</body>
+</html>

@@ -1,0 +1,60 @@
+.pull_right{
+		
+	margin-left:1000px;
+}
+.pull_left{	
+	margin-left:100px;
+	margin-top:100px;
+}
+.searchButton{
+	margin-left:310px;
+}
+.Category{
+	margin-top:80px;
+	margin-left:172px;
+}
+.login{
+	  padding-top: 1px;
+	 margin: 12px 12px 19px;
+    padding-bottom: 20px;
+    padding-right: 82px;
+	color: rgb(255, 255, 255);
+}
+.login ul{
+display:block;
+}
+.login ul li{
+display:inline-block;
+float:right;
+padding-left:5px;
+}
+.pageName{
+	float:left;
+	padding-left:100px;
+}
+
+
+.hoverc:hover{
+ color:blue;
+}	
+	
+.btn {
+    border: none;
+    outline: none;
+    padding: 10px 16px;
+    background-color: #f1f1f1;
+    cursor: pointer;
+    font-size: 18px;
+}	
+.active, .btn:hover {
+    background-color: #666;
+    color: white;
+}	
+.Table{
+		margin-left:172px;
+		color:blue;
+}	
+.MenuButton{
+		margin-left:172px;
+		
+}	

@@ -1,0 +1,53 @@
+window.onload = function () {
+    myFunction();
+    openCity(evt, cityName);
+    
+};
+function myFunction() {
+    if (localStorage.getItem("value") != null) {
+        document.getElementById("myInput").value = localStorage.getItem("value");
+    }
+    //alert(localStorage.getItem("value"));
+    localStorage.clear();
+    var input, filter, table, tr, td, i;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("myTable");
+    //tab = document.getElementById("tab");
+    table.style.display = "block";
+    //tab.style.display = "block";
+    tr = table.getElementsByClassName("search_row");
+   
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByClassName("search_content")[0];
+        if (td) {
+            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                table.style.display = "block";
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+            //if (filter.length == 0) {
+            //    table.style.display = "none";
+            //    tab.style.display = "none";
+            //}
+        }
+    }
+
+  
+    
+}
+
+function openCity(evt, cityName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
+}

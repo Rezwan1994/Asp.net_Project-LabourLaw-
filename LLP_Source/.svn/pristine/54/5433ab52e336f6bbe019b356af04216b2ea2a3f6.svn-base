@@ -1,0 +1,56 @@
+﻿@model List<LLP.Entities.Chapter>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/searchstyle.css" rel="stylesheet" />
+ 
+    <link href="~/Content/FontAwesome/css/font-awesome.min.css" rel="stylesheet" />
+    <script src="~/Content/scripts/jquery.min.js"></script>
+    <script src="~/Content/scripts/myscript.js"></script>
+</head>
+<body onload="myFunction()">
+    <header>
+        <br />
+        <div class="top">
+            <div class="logo" >
+                <img src="~/Content/images/labour_law_logo.png" alt="Alternate Text" />
+
+            </div>
+            <div class="txtsearch">
+                <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for Laws.." title="Type in a name" value="@TempData["value"]"><i id="search_icon " class="fas fa-search"></i>
+            </div>
+        </div>
+      
+        <div class="tab" id="tab">
+            <button class="tablinks active" onclick="openCity(event, 'All')">All</button>
+            <button class="tablinks" onclick="openCity(event, 'Image')">Article</button>
+        </div>
+    </header>
+    <div id="All" class="tabcontent" style="display:block">
+        <div id="myTable">
+           
+                @{
+                    foreach (var i in Model)
+                    {
+                        String content = @Html.Raw(i.Description).ToString();
+                        String roar = content.Substring(0,200);
+                        <div class="search_row">
+
+                            <div class="search_content"><a><h3>@i.Name</h3></a></div>
+                            <div class="search_content"><p>/Home/Chapter?tTitle=@i.Name</p></div>
+                            <div class="search_content"><h5>@roar</h5></div>
+
+                        </div>
+
+                    }
+                }
+           
+        </div>
+    </div>
+
+</body>
+</html>

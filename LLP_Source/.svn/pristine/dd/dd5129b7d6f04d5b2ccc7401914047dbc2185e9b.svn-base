@@ -1,0 +1,61 @@
+﻿using LLP.DataAccess;
+using LLP.Entities;
+using LLP.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace LLP.Facade
+{
+    public class ChapterFacade : BaseFacade
+    {
+        public ChapterFacade(ClientContext clientContext)
+            : base(clientContext)
+        {
+
+        }
+        ChapterDataAccess _ChapterDataAccess
+        {
+            get
+            {
+                return (ChapterDataAccess)_ClientContext[typeof(ChapterDataAccess)];
+            }
+        }
+
+        public bool InsertChapter(Chapter chapter)
+        {
+            return _ChapterDataAccess.Insert(chapter) > 0;
+        }
+        public bool UpdateChapter(Chapter chapter)
+        {
+            return _ChapterDataAccess.Update(chapter) > 0;
+        }
+        public bool DeleteChapter(int id)
+        {
+            return _ChapterDataAccess.Delete(id) > 0;
+        }
+        public Chapter GetChapterById(int id)
+        {
+            return _ChapterDataAccess.Get(id);
+        }
+        public Chapter GetChapterName(string chaptername)
+        {
+
+            string query = string.Format(" UserName ='{0}'", chaptername);
+            return _ChapterDataAccess.GetByQuery(query).FirstOrDefault();
+        }
+   
+        public List<Chapter> GetAllChapterName()
+        {
+         
+            return _ChapterDataAccess.GetAll();
+        }
+        public List<Chapter> GeChapterName(string searchText)
+        {
+
+            return _ChapterDataAccess.GetChapterName(searchText);
+        }
+    }
+}

@@ -1,0 +1,166 @@
+﻿@model LLP.Entities.ChapterContent
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CreateChapter</title>
+
+    <link href="~/Content/css/pnotify.css" rel="stylesheet" />
+
+    <link href="~/Content/css/pnotify.buttons.css" rel="stylesheet" />
+
+    <link href="~/Content/css/pnotify.nonblock.css" rel="stylesheet" />
+    <script src="~/Content/scripts/jquery.min.js"></script>
+    <script src="~/Content/tinymce/tinymce.min.js"></script>
+    <script src="~/Content/tinymce/init-tinymce.js"></script>
+    <script src="~/Content/scripts/pnotify.js"></script>
+    <script src="~/Content/scripts/pnotify.nonblock.js"></script>
+    <script src="~/Content/scripts/pnotify.buttons.js"></script>
+    <script>
+        $(document).ready(function () {
+
+        $('#btnSaveContent').click(function () {
+            var content = {};
+            content.Id = $("#Id").val();
+            content.TitleNo = $("#txtTitleNo").val();
+            content.Title = $("#txtTitle").val();
+          
+            content.ChapterId = $("#txtChapter").val();
+            content.ParentId = parseInt($("#txtParent").val());
+            var cpn = tinymce.get("txtContent").getContent();
+
+
+
+            content.CpContent = cpn;
+
+
+
+            $.ajax({
+                type: "POST",
+                url: "/Admin/SaveContent",
+                data: '{content: ' + JSON.stringify(content) + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response == true) {
+                        new PNotify({
+                            title: 'Saved Successfully',
+                            text: 'The Content is saved...',
+                            type: 'success',
+                            styling: 'bootstrap3'
+                        });
+                    }
+                    else {
+                        new PNotify({
+                            title: 'Saved Successfully',
+                            text: 'The Content is saved...',
+                            type: 'error',
+                            styling: 'bootstrap3'
+                        });
+                    }
+           
+                
+                    //window.location.reload();
+                }
+            });
+        });
+
+        });
+    </script>
+</head>
+<body>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Chapter Content<small>Contents of chapters</small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+
+                        <li>
+                            <a class="close-link"><i class="fa fa-close"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <br />
+                    <div data-parsley-validate class="form-horizontal form-label-left">
+
+
+
+                        @Html.HiddenFor(m => m.Id)
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" >
+                                Title No <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="txtTitleNo" value="@Model.TitleNo" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" >
+                                Title <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="txtTitle" value="@Model.Title" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="control-label col-md-3 col-sm-3 col-xs-12">Content</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <textarea id="txtContent" value="@Model.CpContent" class="tinymce"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                                Chapter Id <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.DropDownListFor(model => model.ChapterId, (IEnumerable<SelectListItem>)ViewBag.contents, new { @class = "form-control col-md-7 col-xs-12",  @id = "txtChapter" })
+                         
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                                Parent Id <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="txtParent" value="@Model.ParentId"  class="form-control col-md-7 col-xs-12">
+                            </div>
+
+                        </div>
+
+                        <div class="ln_solid"></div>
+                        <div class="form-group">
+                            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                <button class="btn btn-primary" type="button">Cancel</button>
+                                <button class="btn btn-primary" type="reset">Reset</button>
+
+                                <button id="btnSaveContent" class="btn btn-success " >
+                                    Save
+                                </button>
+                               
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+<script src="~/Content/scripts/custom.min.js"></script>

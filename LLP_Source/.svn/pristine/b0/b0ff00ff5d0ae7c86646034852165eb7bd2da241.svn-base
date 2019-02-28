@@ -1,0 +1,163 @@
+﻿@model List<LLP.Entities.Chapter> 
+@{
+    Layout = "~/Views/Shared/_llpLayout.cshtml";
+
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+
+
+    <script src="~/Content/scripts/jquery.min.js"></script>
+    <link href="~/Content/css/booksearch.css" rel="stylesheet" />
+    <link href="~/Content/css/font-awesome.min.css" rel="stylesheet" />
+    <script>
+        $(document).ready(function () {
+          // Hide all 2-level ul
+        $("input").keyup(function () {
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("list", "Home")',
+                dataType: "json",
+                data: { search: $("#myInput").val() },
+                success: function (data) {
+                   // $('#msg').html(data.length + " book found");
+                    console.log(data);
+                    var suggestionlist = '';
+                    for (var sterm = 0; sterm < data.length; sterm++) {
+
+                        var item = data[sterm];
+                        $('#searchSuggestion').show();
+
+                        suggestionlist += ('<p id="chapter" onclick="myFunction(this)" item="' + item + '" >' + data[sterm] + '</p>');
+
+
+                    }
+                    $('#searchSuggestion').html(suggestionlist);
+
+                },
+                error: function (xhr, status, error) {
+                    alert("Error");
+                }
+            });
+
+        })
+            $("html").click(function () {
+                $("#searchSuggestion").hide();
+            })
+
+    });
+
+
+        function myFunction(item) {
+            var value = $(item).attr('item');
+            localStorage.setItem("value", value);
+
+            $('.search').val($(item).attr('item'))
+            $(".chapter").hide();
+            window.location.href = '@Url.Action("Search", "Home")';
+        }
+    </script>
+
+</head>
+<body>
+
+
+    <div class="main">
+     
+        <div id="outPopUp">
+       
+                  <div class="logo">
+                      <div class="container">
+                          <div class="row">
+                              <div class="col-md-4   col-sm-6 col-xs-6 col-md-offset-4 col-sm-offset-3 col-xs-offset-3">
+                                  <img src="~/Content/images/labour_law_logo.png"  class="img-responsive"/>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+           
+                <form method="post">
+                 
+                    <br />
+                    <div class="search_bar">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-8  col-md-offset-2">
+                                    <input style="width: 100%;" type="text" id="myInput" class="search" name="search" value="" placeholder="" autofocus />
+
+                    
+                            
+
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8  col-md-offset-2">
+                                    
+
+                                    <div id="searchSuggestion" class="suggestion" style="float:left; ">
+
+                                    </div>
+                          
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   
+                
+                </form>
+               
+                <div  class="container ">
+             
+                      
+                            <div class="row " id="quick_link">
+                                <div class="col-md-8 col-md-offset-2">
+                                    <div class="col-md-3 col-sm-3 col-xs-3" id="single_item">
+                                        <a href="@Url.Action("LoadChapterList","Admin")"><img src="~/Content/images/blog.jpg" alt="Alternate Text" class="img-responsive" /></a> 
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-3" id="single_item">
+                                        <a href="@Url.Action("ActChapterList","Admin")"><img src="~/Content/images/blog.jpg" alt="Alternate Text" class="img-responsive" /></a> 
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-3" id="single_item">
+                                        <img src="~/Content/images/blog.jpg" alt="Alternate Text" class="img-responsive" />
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-3" id="single_item">
+                                        <img src="~/Content/images/blog.jpg" alt="Alternate Text" class="img-responsive" />
+                                    </div>
+
+                                </div>
+                             </div>
+                        
+                    <div class="row " id="quick_link">
+                        <div class="col-md-8 col-md-offset-2">
+                            <div class="col-md-3 col-sm-3 col-xs-3" id="single_item">
+                                <img src="~/Content/images/blog.jpg" alt="Alternate Text" class="img-responsive" />
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-xs-3" id="single_item">
+                                <img src="~/Content/images/blog.jpg" alt="Alternate Text" class="img-responsive" />
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-xs-3" id="single_item">
+                                <img src="~/Content/images/blog.jpg" alt="Alternate Text" class="img-responsive" />
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-xs-3" id="single_item">
+                                <img src="~/Content/images/blog.jpg" alt="Alternate Text" class="img-responsive" />
+                            </div>
+
+                        </div>
+                    </div>
+                    </div>
+                          
+                  </div>
+                         
+                </div>
+            </div>
+              
+</body>
+</html>
+
+

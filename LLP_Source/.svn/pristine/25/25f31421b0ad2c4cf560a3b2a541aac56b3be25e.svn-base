@@ -1,0 +1,20 @@
+﻿@model LLP.Entities.Chapter
+@using Localize = LLP.Web.Ui.Helper.LanguageHelper
+@{
+    ViewBag.Title = "TitleDetails";
+    Layout = "~/Views/Shared/_llpLayout.cshtml";
+}
+<div class="title_details">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                @Localize.T(Model.Description)
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+
+    </div>
+</div>
+
+

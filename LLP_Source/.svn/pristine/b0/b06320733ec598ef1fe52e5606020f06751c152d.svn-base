@@ -1,0 +1,30 @@
+﻿@helper GetTreeView(List<LLP.Entities.ChapterContent> chapter, int? parentID,int? chapterId)
+{
+foreach (var i in chapter.Where(a => a.ParentId.Equals(parentID) && a.ChapterId.Equals(chapterId)))
+{
+        <li>
+            @{var submenu = chapter.Where(a => a.ParentId.Equals(i.Id)).Count();}
+            @if (submenu > 0)
+            {
+                <span class="collapse collapsible">&nbsp;</span>
+            }
+            else
+            {
+                <span style="width:15px; display:inline-block">&nbsp;</span>
+            }
+            <span>
+                <a class="title" href="#"data-location="/admin/ShowChapterContent?Id=@i.Id" >@i.Title</a>
+            </span>
+            @if (submenu > 0)
+            {
+                <ul>
+                    @TreeView.GetTreeView(chapter, i.Id,i.ChapterId)
+                    @* Recursive  Call for Populate Sub items here*@
+                </ul>
+            }
+        </li>
+                }
+}
+
+
+

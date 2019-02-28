@@ -1,0 +1,257 @@
+﻿
+@using Localize = LLP.Web.Ui.Helper.LanguageHelper
+@{
+    Layout = "~/Views/Shared/_llpLayout.cshtml";
+
+}
+<link href="https://fonts.googleapis.com/css?family=Do+Hyeon" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
+<link href="~/Content/css/perfect-scrollbar.css" rel="stylesheet" />
+<style>
+    
+</style>
+ <!--/.header-->
+
+<link href="~/Content/css/book.css" rel="stylesheet" />
+<div class="Chapter">
+    @*<div class="container">*@
+
+    <button class="button"><span>Chapters </span></button>
+    <div class="constant">
+        <div class="container" id="sidescroll">
+            <div class="row" >
+                <div class="col-md-2 col-sm-3 col-xs-4" id="border">
+                 
+                    <div id="sticker">
+                        <input type="text" id="search" placeholder="Search In your book..">
+                        <div class="scrollbar scrollbar-primary" id="partial_View">
+                           
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-9 col-sm-12 col-xs-12" id="right_content">
+                    <div class="content_wrapper">
+                        <h3 style="text-align:center;font-family: 'Do Hyeon', sans-serif;">Bangladesh Labour Rule</h3>
+                        <div class="Chapter_Content" id="cpcontent">
+                            <h2>Introduction</h2>
+                            Labour law (or “labor”, or “employment” law) is the body of laws, administrative rulings, and precedents which address the legal rights of, and restrictions on, working people and their organizations. As such, it mediates many aspects of the relationship between trade unions, employers and employees. In Canada, employment laws related to unionized workplaces are differentiated from those relating to particular individuals. In most countries however, no such distinction is made. However, there are two broad categories of labour law. First, collective labour law relates to the tripartite relationship between employee, employer and union. Second, individual labour law concerns employees’ rights at work and through the contract for work. The labour movement has been instrumental in the enacting of laws protecting labour rights in the 19th and 20th centuries. Labour rights have been integral to the social and economic development since the industrial revolution.
+
+                            Labour law arose due to the demands for workers for better conditions, the right to organize, and the simultaneous demands of employers to restrict the powers of workers’ many organizations and to keep labour costs low. Employers’ costs can increase due to workers organizing to win higher wages, or by laws imposing costly requirements, such as health and safety or equal opportunities conditions. Workers’ organizations, such as trade unions, can also transcend purely industrial disputes, and gain political power – which some employers may oppose. The state of labour law at any one time is therefore both the product of, and a component of, struggles between different interests in society.
+                            Labour law (or “labor”, or “employment” law) is the body of laws, administrative rulings, and precedents which address the legal rights of, and restrictions on, working people and their organizations. As such, it mediates many aspects of the relationship between trade unions, employers and employees. In Canada, employment laws related to unionized workplaces are differentiated from those relating to particular individuals. In most countries however, no such distinction is made. However, there are two broad categories of labour law. First, collective labour law relates to the tripartite relationship between employee, employer and union. Second, individual labour law concerns employees’ rights at work and through the contract for work. The labour movement has been instrumental in the enacting of laws protecting labour rights in the 19th and 20th centuries. Labour rights have been integral to the social and economic development since the industrial revolution.
+
+                            Labour law arose due to the demands for workers for better conditions, the right to organize, and the simultaneous demands of employers to restrict the powers of workers’ many organizations and to keep labour costs low. Employers’ costs can increase due to workers organizing to win higher wages, or by laws imposing costly requirements, such as health and safety or equal opportunities conditions. Workers’ organizations, such as trade unions, can also transcend purely industrial disputes, and gain political power – which some employers may oppose. The state of labour law at any one time is therefore both the product of, and a component of, struggles between different interests in society.
+                            Labour law (or “labor”, or “employment” law) is the body of laws, administrative rulings, and precedents which address the legal rights of, and restrictions on, working people and their organizations. As such, it mediates many aspects of the relationship between trade unions, employers and employees. In Canada, employment laws related to unionized workplaces are differentiated from those relating to particular individuals. In most countries however, no such distinction is made. However, there are two broad categories of labour law. First, collective labour law relates to the tripartite relationship between employee, employer and union. Second, individual labour law concerns employees’ rights at work and through the contract for work. The labour movement has been instrumental in the enacting of laws protecting labour rights in the 19th and 20th centuries. Labour rights have been integral to the social and economic development since the industrial revolution.
+
+                            Labour law arose due to the demands for workers for better conditions, the right to organize, and the simultaneous demands of employers to restrict the powers of workers’ many organizations and to keep labour costs low. Employers’ costs can increase due to workers organizing to win higher wages, or by laws imposing costly requirements, such as health and safety or equal opportunities conditions. Workers’ organizations, such as trade unions, can also transcend purely industrial disputes, and gain political power – which some employers may oppose. The state of labour law at any one time is therefore both the product of, and a component of, struggles between different interests in society.
+                            Labour law arose due to the demands for workers for better conditions, the right to organize, and the simultaneous demands of employers to restrict the powers of workers’ many organizations and to keep labour costs low. Employers’ costs can increase due to workers organizing to win higher wages, or by laws imposing costly requirements, such as health and safety or equal opportunities conditions. Workers’ organizations, such as trade unions, can also transcend purely industrial disputes, and gain political power – which some employers may oppose. The state of labour law at any one time is therefore both the product of, and a component of, struggles between different interests in society.
+                            Labour law (or “labor”, or “employment” law) is the body of laws, administrative rulings, and precedents which address the legal rights of, and restrictions on, working people and their organizations. As such, it mediates many aspects of the relationship between trade unions, employers and employees. In Canada, employment laws related to unionized workplaces are differentiated from those relating to particular individuals. In most countries however, no such distinction is made. However, there are two broad categories of labour law. First, collective labour law relates to the tripartite relationship between employee, employer and union. Second, individual labour law concerns employees’ rights at work and through the contract for work. The labour movement has been instrumental in the enacting of laws protecting labour rights in the 19th and 20th centuries. Labour rights have been integral to the social and economic development since the industrial revolution.
+
+                            Labour law arose due to the demands for workers for better conditions, the right to organize, and the simultaneous demands of employers to restrict the powers of workers’ many organizations and to keep labour costs low. Employers’ costs can increase due to workers organizing to win higher wages, or by laws imposing costly requirements, such as health and safety or equal opportunities conditions. Workers’ organizations, such as trade unions, can also transcend purely industrial disputes, and gain political power – which some employers may oppose. The state of labour law at any one time is therefore both the product of, and a component of, struggles between different interests in society.
+                            Labour law (or “labor”, or “employment” law) is the body of laws, administrative rulings, and precedents which address the legal rights of, and restrictions on, working people and their organizations. As such, it mediates many aspects of the relationship between trade unions, employers and employees. In Canada, employment laws related to unionized workplaces are differentiated from those relating to particular individuals. In most countries however, no such distinction is made. However, there are two broad categories of labour law. First, collective labour law relates to the tripartite relationship between employee, employer and union. Second, individual labour law concerns employees’ rights at work and through the contract for work. The labour movement has been instrumental in the enacting of laws protecting labour rights in the 19th and 20th centuries. Labour rights have been integral to the social and economic development since the industrial revolution.
+
+                            Labour law arose due to the demands for workers for better conditions, the right to organize, and the simultaneous demands of employers to restrict the powers of workers’ many organizations and to keep labour costs low. Employers’ costs can increase due to workers organizing to win higher wages, or by laws imposing costly requirements, such as health and safety or equal opportunities conditions. Workers’ organizations, such as trade unions, can also transcend purely industrial disputes, and gain political power – which some employers may oppose. The state of labour law at any one time is therefore both the product of, and a component of, struggles between different interests in society.
+
+                        </div>
+                    </div>
+                  
+                </div>
+               
+            </div>
+        </div>
+    </div>
+    
+
+</div>
+
+<script src="~/Content/scripts/jquery.min.js"></script>
+<script src="~/Content/scripts/perfect-scrollbar.js"></script>
+<script>
+
+    if ($(window).width() < 746) {
+        $("#border").hide();
+        $(".button").click(function () {
+            if ($("#right_content").is(':visible')) {
+                $("#right_content").hide();
+                $("#border").slideDown();
+             
+            }
+            else {
+                $("#border").slideUp();
+                $("#right_content").show();
+                alert("hoirre");
+            }
+         
+        })
+   
+    }
+    var ps = new PerfectScrollbar('#partial_View');
+   
+
+  
+
+    var myFunction = function(){
+  
+   
+        var input, filter, table, tr, td, i;
+        input = document.getElementById("search");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+
+  
+        tr = table.getElementsByClassName("ChapterName");
+
+        for (i = 0; i < tr.length; i++) {
+            tdlength = $('.' + tr[0].className).children().length
+            for (j = 0; j < tdlength; j++)
+            {
+                td = $('.' + tr[i].className).children().children().children()[j].innerHTML;
+              
+                if (td) {
+                    if (td.toUpperCase().indexOf(filter) > -1) {
+                        $('.' + tr[i].className).children().children().children()[j].style.visibility = "visible";
+                       // $('.' + tr[i].className).children().children().children()[j].style.display = "block";
+                       // table.style.display = "block";
+                        tr[i].style.display = "";
+                        console.log(td);
+                    } else {
+                        $('.' + tr[i].className).children().children().children()[j].style.visibility = "hidden";
+                       
+                    }
+                    //if (filter.length == 0) {
+                    //    table.style.display = "none";
+                    //    tab.style.display = "none";
+                    //}
+                }
+            }
+          
+        }
+    }
+    
+
+
+
+
+
+
+        $(".ContentTitle").click(function (item) {
+            var clickitem1 = $(item.target).attr('data-location');
+
+            $(".Chapter_Content").load(clickitem1);
+        })
+
+
+
+
+
+
+
+
+        @*$("input").keyup(function () {
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("SearchInbook", "Home")',
+                dataType: "json",
+                data: { search: $("#search").val() },
+                success: function (data) {
+                    $('#cpcontent').html("");
+                    //'<br>';
+                    // console.log(data);
+                    var suggestionlist = '';
+
+                    for (var sterm = 0; sterm < data.length; sterm++) {
+
+                        var item = data[sterm];
+                        $('#searchSuggestion').show();
+                        suggestionlist += ('<p class="chapter" data-location="/Home/ShowContentbyTitle?Title=' + encodeURIComponent(item) + '" onclick="myFunction(this)" item="' + item + '" >' + data[sterm] + '</p>');
+                        // suggestionlist += ('<a class="ContentTitle" onclick="LinkAssign(this)" item="' + gurl+'" >' + data[sterm]+ '</a> <br>');
+
+                    }
+                    $('#searchSuggestion').html('<div class="forborder">' + suggestionlist + '</div>');
+
+                },
+                error: function (xhr, status, error) {
+                    alert("Error");
+                }
+            });
+
+
+        })*@
+
+
+
+
+        var s = $("#sticker");
+        var h = $("headersticker");
+        var pos = s.position();
+        $(window).scroll(function () {
+            var windowpos = $(window).scrollTop();
+            console.log(windowpos + " " + pos);
+            if (windowpos > pos.top) {
+                s.addClass("stick");
+                h.addClass("headerstick");
+            } else if (windowpos == 0) {
+                console.log("dfgdfg");
+                s.removeClass("stick");
+            }
+        });
+
+
+
+        //var myFunction = function (item) {
+        //    //var clickitem1 = $(item.target).attr('data-location');data-location='+gurl+'
+        //    //  encodeURIComponent(_href))
+        //    var value = $(item).attr("item");
+        //    var clickitem = $(item).attr('data-location');
+        //    // alert(clickitem);
+        //    $('#searchSuggestion').html("");
+        //    $(".Chapter_Content").load(clickitem);
+        //    // alert(value);
+        //    //$(".Chapter_Content").load(clickitem1);
+        //    // data - location="/Home/ShowContentbyTitle?Title=value";
+
+        //}
+        var NavigatePageListing = function () {
+            var searchText = $("#search").val();
+            $("#partial_View").load("/Home/TreePartialView", { SearchText: searchText});
+        }
+            //alert(pageNumber);
+            //if (typeof (pageNumber) == "undefined") {
+            //    return;
+            //}
+    
+            //var FilterKey = $("#PropertyListingCategory").val();
+     
+    
+            //$("#partialViewLoadListing").load("/JobsCategory/JobList", { FilterKey: FilterKey, CompanyId: AgencyId, SearchText: searchText, PageNumber: pageNumber, UnitPerPage: unitperpage });
+        var delay = (function () {
+            var timer = 0;
+            return function (callback, ms) {
+                clearTimeout(timer);
+                timer = setTimeout(callback, ms);
+            };
+        })();
+        
+        $(document).ready(function(){
+            $('#search').keyup(function () {
+                delay(function () {
+                    NavigatePageListing();
+                }, 100);
+               
+          
+           
+            })
+
+            $("#partial_View").load("/Home/TreePartialView")
+
+
+        
+        });
+          
+        
+
+
+      //
+
+</script>

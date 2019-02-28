@@ -1,0 +1,58 @@
+﻿using System;
+using System.Data;
+using System.Data.SqlClient;
+
+using LLP.Framework;
+using LLP.Framework.Exceptions;
+using LLP.Entities;
+using System.Linq;
+using LLP.Entities.Bases;
+using LLP.Entities.List;
+using System.Collections.Generic;
+
+namespace LLP.DataAccess
+{
+	public partial class ChapterDataAccess
+	{
+        public List<Chapter> GetChapterName(string SearchText)
+        {
+
+            List<Chapter> chapter = new List<Chapter>();
+            string SqlQuery = @"select * from Chapter 
+                                ";
+
+            if (!string.IsNullOrWhiteSpace(SearchText))
+            {
+                SqlQuery += " where chapterno in (select chapterid from chaptercontent where title like '%{0}%') ";
+            }
+
+            using (SqlCommand cmd = GetSQLCommand(string.Format(SqlQuery, SearchText)))
+            {
+                DataSet dsResult = GetDataSet(cmd);
+                DataTable dt = dsResult.Tables[0];
+                try
+                {
+
+                    chapter = (from DataRow dr in dt.Rows
+                               select new Chapter()
+                               {
+                                   Name = dr.ToStringDataRow("Name"),
+                                   Type = dr.ToStringDataRow("Type"),
+                                   ChapterNo = dr.ToStringDataRow("ChapterNo"),
+                                   Id = dr.ToIntDataRow("Id"),
+                                   Description = dr.ToStringDataRow("Description")
+                                   
+
+                               }).ToList();
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+                return chapter;
+            }
+
+
+        }
+    }	
+}

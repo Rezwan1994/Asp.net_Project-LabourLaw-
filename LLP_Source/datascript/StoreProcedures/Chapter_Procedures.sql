@@ -1,0 +1,340 @@
+﻿USE llpdb
+GO
+
+/****** Object:  StoredProcedure [dbo]..InsertChapter    Script Date: 4/18/2018 4:00:54 PM ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[InsertChapter]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[InsertChapter]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE InsertChapter
+(
+	@Id int OUTPUT,
+	@ChapterNo nvarchar(50),
+	@Name nvarchar(500),
+	@Type nvarchar(50),
+	@Description nvarchar(max),
+	@PageUrl nvarchar(1000)
+)
+AS
+    INSERT INTO [dbo].[Chapter] 
+	(
+	[ChapterNo],
+	[Name],
+	[Type],
+	[Description],
+	[PageUrl]
+    ) 
+	VALUES 
+	(
+	@ChapterNo,
+	@Name,
+	@Type,
+	@Description,
+	@PageUrl
+    )
+	DECLARE @Err int
+	DECLARE @Result int
+
+	SET @Result = @@ROWCOUNT
+	SET @Err = @@ERROR 
+	If @Err <> 0 
+	BEGIN
+		SET @Id = -1
+		RETURN @Err
+	END
+	ELSE
+	BEGIN
+		If @Result = 1 
+		BEGIN
+			-- Everything is OK
+			SET @Id = @@IDENTITY
+		END
+		ELSE
+		BEGIN
+			SET @Id = -1
+			RETURN 0
+		END
+	END
+
+	RETURN @Id
+GO
+
+/****** Object:  StoredProcedure [dbo].UpdateChapter    Script Date: 4/18/2018 4:00:54 PM ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UpdateChapter]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[UpdateChapter]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE UpdateChapter
+(
+	@Id int,
+	@ChapterNo nvarchar(50),
+	@Name nvarchar(500),
+	@Type nvarchar(50),
+	@Description nvarchar(max),
+	@PageUrl nvarchar(1000)
+)
+AS
+    UPDATE [dbo].[Chapter] 
+	SET
+	[ChapterNo] = @ChapterNo,
+	[Name] = @Name,
+	[Type] = @Type,
+	[Description] = @Description,
+	[PageUrl] = @PageUrl
+	WHERE ( Id = @Id )
+
+	DECLARE @Err int
+	DECLARE @Result int
+	SET @Result = @@ROWCOUNT
+	SET @Err = @@ERROR 
+
+	If @Err <> 0 
+	BEGIN
+		SET @Result = -1
+	END
+
+	RETURN @Result
+GO
+
+/****** Object:  StoredProcedure [dbo].DeleteChapter    Script Date: 4/18/2018 4:00:54 PM ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DeleteChapter]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[DeleteChapter]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE DeleteChapter
+(
+	@Id int
+)
+AS
+	DELETE [dbo].[Chapter] 
+
+    WHERE ( Id = @Id )
+
+	DECLARE @Err int
+	DECLARE @Result int
+
+	SET @Result = @@ROWCOUNT
+	SET @Err = @@ERROR 
+
+	If @Err <> 0 
+	BEGIN
+		SET @Result = -1
+	END
+
+	RETURN @Result
+GO
+
+/****** Object:  StoredProcedure [dbo].GetAllChapter    Script Date: 4/18/2018 4:00:54 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetAllChapter]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetAllChapter]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetAllChapter
+AS
+	SELECT *		
+	FROM
+		[dbo].[Chapter]
+
+RETURN @@ROWCOUNT
+GO
+
+/****** Object:  StoredProcedure [dbo].GetChapterById    Script Date: 4/18/2018 4:00:54 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetChapterById]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetChapterById]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetChapterById
+(
+	@Id int
+)
+AS
+	SELECT *		
+	FROM
+		[dbo].[Chapter]
+	WHERE ( Id = @Id )
+
+RETURN @@ROWCOUNT
+GO
+
+/****** Object:  StoredProcedure [dbo].GetChapterMaximumId    Script Date: 4/18/2018 4:00:54 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetChapterMaximumId]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetChapterMaximumId]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetChapterMaximumId
+AS
+	DECLARE @Result int
+	SET @Result = 0
+	
+	SELECT @Result = MAX(Id) 		
+	FROM
+		[dbo].[Chapter]
+
+	If @Result > 0 
+		BEGIN
+			-- Everything is OK
+			RETURN @Result
+		END
+		ELSE
+		BEGIN
+			RETURN 0
+		END
+RETURN @Result
+GO
+
+/****** Object:  StoredProcedure [dbo].GetChapterRowCount    Script Date: 4/18/2018 4:00:54 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetChapterRowCount]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetChapterRowCount]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetChapterRowCount
+AS
+	DECLARE @Result int
+	SET @Result = 0
+	SELECT @Result = COUNT(*) 		
+	FROM
+		[dbo].[Chapter]
+		
+RETURN @Result
+GO
+
+/****** Object:  StoredProcedure [dbo].GetPagedChapter    Script Date: 4/18/2018 4:00:54 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetPagedChapter]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetPagedChapter]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetPagedChapter
+(
+	@TotalRows		int	OUTPUT,
+	@PageIndex	int,
+	@RowPerPage		int,
+	@WhereClause	nvarchar(4000),
+	@SortColumn		nvarchar(128),
+	@SortOrder		nvarchar(4)
+)
+AS
+BEGIN 
+
+SET @PageIndex = isnull(@PageIndex, -1)
+SET @RowPerPage = isnull(@RowPerPage, -1)
+SET @WhereClause = isnull(@WhereClause, '')
+SET @SortColumn = isnull(@SortColumn, '')
+SET @SortOrder = isnull(@SortOrder, '')
+SET @TotalRows = 0
+SET @RowPerPage = @RowPerPage -1
+DECLARE @SQL1 nvarchar(4000)
+DECLARE @SQL2 nvarchar(4000)
+
+IF (@WhereClause != '')
+BEGIN
+	SET @WhereClause = 'WHERE ' + char(13) + @WhereClause	
+END
+
+IF (@SortColumn != '')
+BEGIN
+	SET @SortColumn = 'ORDER BY ' + @SortColumn
+
+	IF (@SortOrder != '')
+	BEGIN
+		SET @SortColumn = @SortColumn + ' ' + @SortOrder
+	END
+END
+ELSE
+BEGIN
+	SET @SortColumn = @SortColumn + ' ORDER BY [Id] ASC'
+END
+
+SET @SQL1 = 'WITH ChapterEntries AS (
+			SELECT ROW_NUMBER() OVER ('+ @SortColumn +')AS Row,
+	[Id],
+	[ChapterNo],
+	[Name],
+	[Type],
+	[Description],
+	[PageUrl]
+				FROM 
+				[dbo].[Chapter]
+					'+ @WhereClause +'
+				)
+				SELECT 
+	[Id],
+	[ChapterNo],
+	[Name],
+	[Type],
+	[Description],
+	[PageUrl]
+				FROM 
+					ChapterEntries
+				WHERE 
+					Row between '+ CONVERT(nvarchar(10), (@PageIndex * @RowPerPage) + 1) +'And ('+ CONVERT(nvarchar(10), (@PageIndex * @RowPerPage) +@RowPerPage+ 1) +')'
+	
+
+SET @SQL2 =		' SELECT @TotalRows = COUNT(*) 
+				FROM 
+				[dbo].[Chapter] ' + @WhereClause
+								
+EXEC sp_executesql @SQL2, N'@TotalRows int output', @TotalRows = @TotalRows output
+
+EXEC sp_executesql @SQL1
+
+RETURN @@ROWCOUNT
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].GetChapterByQuery    Script Date: 4/18/2018 4:00:54 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetChapterByQuery]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetChapterByQuery]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetChapterByQuery
+(
+	@Query	nvarchar(4000)
+)
+AS
+BEGIN 
+
+SET @Query = isnull(@Query, '')
+DECLARE @SQL1 nvarchar(4000)
+
+IF (@Query != '')
+BEGIN
+	SET @Query = 'WHERE ' + char(13) + @Query	
+END
+
+SET @SQL1 =		'SELECT * 
+				FROM 
+				[dbo].[Chapter] ' + @Query
+								
+EXEC sp_executesql @SQL1
+
+RETURN @@ROWCOUNT
+END
+GO
+

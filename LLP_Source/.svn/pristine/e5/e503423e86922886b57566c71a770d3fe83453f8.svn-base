@@ -1,0 +1,190 @@
+﻿
+@model LLP.Web.BookChapter
+@using Localize = LLP.Web.Ui.Helper.LanguageHelper
+@{
+    Layout = null;
+}
+<style>
+    #pagination {
+        display: inline-block;
+    }
+</style>
+@if (ViewBag.OutOfNumber == 0)
+{
+    @ViewBag.Message;
+}
+else
+{
+    if (ViewBag.PageCount > 0)
+    {
+        <div class="paginationtextdv" style="padding-top:5px;padding-bottom:8px">
+            <span style="padding-left:15px;margin-bottom:5px">@ViewBag.CurrentNumber of @ViewBag.OutOfNumber</span>
+        </div>
+    }
+
+    <table id="datatable" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Title No</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Chapter Id</th>
+                <th>Parent</th>
+                <th></th>
+
+            </tr>
+
+
+        </thead>
+
+
+        <tbody>
+            @{
+                foreach (var j in Model.ChapterList)
+                {
+                    var Id = Convert.ToInt32(j.ChapterNo);
+
+                    foreach (var i in Model.ContentList)
+                    {
+                        if (i.ChapterId == Id)
+                        {
+                            <tr>
+                                <td>@i.TitleNo</td>
+                                <td>@i.Title</td>
+                                <td>@Html.Raw(i.CpContent)</td>
+                                <td>@i.ChapterId</td>
+                                <td>@i.ParentId</td>
+
+                                <td><a class="cplist" href="javascript:void(0)" data-location="/admin/CreateCpContent?Id=@i.Id">Edit</a></td>
+
+                            </tr>
+                        }
+
+                    }
+
+
+                }
+
+            }
+
+
+
+        </tbody>
+    </table>
+
+
+
+                if (ViewBag.PageCount == 1)
+                {
+                    <div class="paginationMiddleButtondv" id="pagination">
+                        <button class="PaginationButtons disabledBtn"><</button>
+                    </div>
+                    <div class="NavigatonButtonsDiv" id="pagination">
+                        <button class="NavigationButton activeBtn" onclick="NavigatePageListing(@(ViewBag.PageNumber))">1</button>
+                    </div>
+                    <div class="paginationRightButtondv" id="pagination">
+                        <button class="PaginationButtons disabledBtn" disabled>></button>
+                    </div>
+                }
+                else if (ViewBag.PageCount == 2)
+                {
+                    <div class="paginationMiddleButtondv" id="pagination">
+                        <button class="PaginationButtons @(ViewBag.PageNumber == 1 ? "disabledBtn" : "")" onclick="NavigatePageListing(@(ViewBag.PageNumber != 1 ? ViewBag.PageNumber - 1 : ""))"><</button>
+                    </div>
+                    <div class="NavigatonButtonsDiv" id="pagination">
+                        <button class="NavigationButton @(ViewBag.PageNumber == 1 ? "activeBtn" : "")" onclick="NavigatePageListing(1)">1</button>
+                    </div>
+                    <div class="NavigatonButtonsDiv" id="pagination">
+                        <button class="NavigationButton @(ViewBag.PageNumber == 2 ? "activeBtn" : "")" onclick="NavigatePageListing(2)">2</button>
+                    </div>
+                    <div class="paginationRightButtondv" id="pagination">
+                        <button disabled="@(ViewBag.PageNumber == 2 ? "disabled" : "")" onclick="NavigatePageListing(@(ViewBag.PageNumber != 2 ? ViewBag.PageNumber + 1 : ""))">></button>
+                    </div>
+                }
+                else if (ViewBag.PageCount == 3 || (ViewBag.PageNumber == 1 && ViewBag.PageCount == 3))
+                {
+                    <div class="paginationMiddleButtondv" id="pagination">
+                        <button class="PaginationButtons @(ViewBag.PageNumber == 1 ? "disabledBtn" : "")" onclick="NavigatePageListing(@(ViewBag.PageNumber != 1 ? ViewBag.PageNumber - 1 : ""))"><</button>
+                    </div>
+                    <div class="NavigatonButtonsDiv" id="pagination">
+                        <button class="NavigationButton @(ViewBag.PageNumber == 1 ? "activeBtn" : "")" onclick="NavigatePageListing(1)">1</button>
+                    </div>
+                    <div class="NavigatonButtonsDiv" id="pagination">
+                        <button class="NavigationButton @(ViewBag.PageNumber == 2 ? "activeBtn" : "")" onclick="NavigatePageListing(2)">2</button>
+                    </div>
+                    <div class="NavigatonButtonsDiv" id="pagination">
+                        <button class="NavigationButton @(ViewBag.PageNumber == 3 ? "activeBtn" : "")" onclick="NavigatePageListing(3)">3</button>
+                    </div>
+                    <div class="paginationRightButtondv" id="pagination">
+                        <button disabled="PaginationButtons @(ViewBag.PageNumber == 3 ? "disabled" : "")" onclick="NavigatePageListing(@(ViewBag.PageNumber != 3 ? ViewBag.PageNumber + 1 : ""))">></button>
+                    </div>
+                }
+                else if (ViewBag.PageCount > 3)
+                {
+                    if (ViewBag.PageNumber == 1)
+                    {
+                        <div class="paginationMiddleButtondv" id="pagination">
+                            <button disabled onclick="NavigatePageListing()"><</button>
+                        </div>
+                        <div class="NavigatonButtonsDiv" id="pagination">
+                            <button class="NavigationButton activeBtn" onclick="NavigatePageListing(@(ViewBag.PageNumber))">@(ViewBag.PageNumber)</button>
+                        </div>
+                        <div class="NavigatonButtonsDiv" id="pagination">
+                            <button class="NavigationButton" onclick="NavigatePageListing(@(ViewBag.PageNumber + 1))">@(ViewBag.PageNumber + 1)</button>
+                        </div>
+                        <div class="NavigatonButtonsDiv" id="pagination">
+                            <button class="NavigationButton" onclick="NavigatePageListing(@(ViewBag.PageNumber + 2))">@(ViewBag.PageNumber + 2)</button>
+                        </div>
+                        <div class="paginationRightButtondv" id="pagination">
+                            <button class="PaginationButtons" onclick="NavigatePageListing(@(ViewBag.PageNumber + 1))">></button>
+                        </div>
+                    }
+                    else if (ViewBag.PageNumber == ViewBag.PageCount)
+                    {
+                        <div class="paginationMiddleButtondv">
+                            <button class="PaginationButtons" onclick="NavigatePageListing(@(ViewBag.PageNumber - 1))" id="pagination"><</button>
+                        </div>
+                        <div class="NavigatonButtonsDiv">
+                            <button class="NavigationButton" onclick="NavigatePageListing(@(ViewBag.PageNumber - 2))" id="pagination">@(ViewBag.PageNumber - 2)</button>
+                        </div>
+                        <div class="NavigatonButtonsDiv">
+                            <button class="NavigationButton" onclick="NavigatePageListing(@(ViewBag.PageNumber - 1))" id="pagination">@(ViewBag.PageNumber - 1)</button>
+                        </div>
+                        <div class="NavigatonButtonsDiv">
+                            <button class="NavigationButton activeBtn" onclick="NavigatePageListing(@(ViewBag.PageNumber))" id="pagination">@(ViewBag.PageNumber)</button>
+                        </div>
+                        <div class="paginationRightButtondv" id="pagination">
+                            <button disabled onclick="NavigatePageListing()">></button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="paginationMiddleButtondv" id="pagination">
+                            <button class="PaginationButtons" onclick="NavigatePageListing(@(ViewBag.PageNumber - 1))"><</button>
+                        </div>
+                        <div class="NavigatonButtonsDiv" id="pagination">
+                            <button class="NavigationButton" onclick="NavigatePageListing(@(ViewBag.PageNumber - 1))">@(ViewBag.PageNumber - 1)</button>
+                        </div>
+                        <div class="NavigatonButtonsDiv" id="pagination">
+                            <button class="NavigationButton activeBtn" onclick="NavigatePageListing(@(ViewBag.PageNumber))">@(ViewBag.PageNumber)</button>
+                        </div>
+                        <div class="NavigatonButtonsDiv" id="pagination">
+                            <button class="NavigationButton" onclick="NavigatePageListing(@(ViewBag.PageNumber + 1))">@(ViewBag.PageNumber + 1)</button>
+                        </div>
+                        <div class="paginationRightButtondv" id="pagination">
+                            <button class="PaginationButtons" onclick="NavigatePageListing(@(ViewBag.PageNumber + 1))">></button>
+                        </div>
+                        }
+                    }
+                }
+<script>
+    $(document).ready(function () {
+
+        $(".cplist").click(function (item) {
+
+            var clickitem = $(item.target).attr('data-location');
+            $(".Content").load(clickitem);
+        }) // Hide all 2-level ul
+
+    });
+</script>

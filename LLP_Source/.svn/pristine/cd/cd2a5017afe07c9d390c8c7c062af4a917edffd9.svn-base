@@ -1,0 +1,126 @@
+﻿@using Localize = LLP.Web.Ui.Helper.LanguageHelper
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_llpLayout.cshtml";
+}
+
+
+
+
+    <link rel="icon" type="image/png" href="~/Content/images/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="~/Content/FontAwesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/css/material-design-iconic-font.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/css/animate.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/css/hamburgers.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/css/animsition.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/css/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/css/daterangepicker.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/css/util.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/css/main.css">
+    <link href="~/Content/css/pnotify.css" rel="stylesheet" />
+    <link href="~/Content/css/pnotify.buttons.css" rel="stylesheet" />
+    <link href="~/Content/css/pnotify.nonblock.css" rel="stylesheet" />
+
+
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100">
+                <div class="login100-form validate-form">
+                    <span class="login100-form-title p-b-26">
+                        @Localize.T("Welcome")
+                    </span>
+                    <span class="login100-form-title p-b-48">
+                        <img src="~/Content/images/labour_law_logo.png" alt="Alternate Text" />
+                    </span>
+
+                    <div class="wrap-input100 validate-input" data-validate="Valid email is: a@b.c">
+                        <input class="input100" id="email" type="text" name="email">
+                        <span class="focus-input100" data-placeholder= @Localize.T("Email")></span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input" data-validate="Enter password">
+                        <span class="btn-show-pass">
+                            <i class="zmdi zmdi-eye"></i>
+                        </span>
+                        <input class="input100" type="password" name="pass" id="password">
+                        <span class="focus-input100" data-placeholder=@Localize.T("Password")></span>
+                    </div>
+
+                    <div class="container-login100-form-btn">
+                        <div class="wrap-login100-form-btn">
+                            <div class="login100-form-bgbtn"></div>
+                            <button class="login100-form-btn" id="login">
+                                @Localize.T("Login")
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="text-center p-t-115">
+                        <span class="txt1">
+                            @Localize.T("Don’t have an account?")
+                        </span>
+
+                        <a class="txt2" href="/Home/Registration">
+                            @Localize.T("Sign Up")
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="dropDownSelect1"></div>
+
+ 
+<script src="~/Content/scripts/jquery.min.js"></script>
+
+<script src="~/Content/scripts/animsition.min.js"></script>
+<script src="~/Content/scripts/popper.min.js"></script>
+<script src="~/Content/scripts/select2.min.js"></script>
+<script src="~/Content/scripts/moment.min.js"></script>
+<script src="~/Content/scripts/daterangepicker.js"></script>
+<script src="~/Content/scripts/countdowntime.js"></script>
+<script src="~/Content/scripts/main.js"></script>
+<script src="~/Content/scripts/pnotify.js"></script>
+<script src="~/Content/scripts/pnotify.nonblock.js"></script>
+<script src="~/Content/scripts/pnotify.buttons.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $('#login').click(function () {
+            var content = {};
+            content.EmailAddress = $("#email").val();
+            content.Password = $("#password").val();
+
+            $.ajax({
+                type: "POST",
+                url: "/Home/UserChecking",
+                data: '{content: ' + JSON.stringify(content) + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.result == true) {
+                        window.location.href = "/User/Index";
+                    }
+                    else {
+                        $("#email").val('');
+                        $("#password").val('');
+                        new PNotify({
+                            title: 'Error',
+                            text: 'Wrong Username or password',
+                            type: 'error',
+                            styling: 'bootstrap3'
+                      
+                        });
+                     
+                     
+                    }
+
+
+                    //window.location.reload();
+                }
+            });
+        });
+    });
+</script>

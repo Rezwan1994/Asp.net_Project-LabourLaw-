@@ -1,0 +1,62 @@
+﻿@model IEnumerable<LLP.Entities.Permission>
+
+@{
+    Layout = null;
+}
+
+
+
+<link href="~/Content/css/PertialPermission.css" rel="stylesheet" />
+<div>
+
+    <!-- Modal content -->
+    <div class="modal-content">
+  
+        <h2>View or change permisson group</h2>
+        @{
+            foreach (var j in Model)
+            {
+
+                if (j.Selected == 1)
+                {
+                    <script>
+                        $('#permissionChack' +@j.Id ).prop('checked', true);
+                   
+                     </script>
+                }
+
+
+                <input type="checkbox" class="checkboxItem" name="vehicle" id="permissionChack@(j.Id)" value="@j.Id" onclick="SaveChecked(@j.Id)"> @j.DisplayText<br>
+
+            }
+        }
+
+       
+
+    </div>
+
+</div>
+ <script>
+     var SaveChecked = function(item){
+      
+         var permissionId = item;
+         var UserId =  $("#userid").val();
+     
+         console.log(permissionId + " " + UserId);
+         $.ajax ({
+             type: 'GET',
+             url: '/Admin/SavedChacked',
+             dataType: "json",
+             data: {permissionId:permissionId,UserId: UserId },
+             success: function (data) {
+
+                
+
+             },
+       
+
+         });
+     }
+ 
+ </script>
+                  

@@ -1,0 +1,31 @@
+﻿
+@{
+    ViewBag.Title = "Confirm";
+    Layout = null;
+}
+<script src="~/Content/scripts/jquery.min.js"></script>
+<br /><br />
+<div class="alert alert-warning" id="previous">
+    <strong>Confirm Your Account</strong>
+    <input type="submit" class="btn btn-warning" value="Confirm" onclick="Verified()" />
+</div>
+<div class="alert alert-success" id="after" style="display:none">
+    <strong><span class="glyphicon glyphicon-ok"></span> Your Account Is Active Now</strong>
+</div>
+<script>
+    var Verified = function() {
+        alert('@ViewBag.regID');
+        $.ajax({
+            type: "post",
+            url: "/Home/RegisterConfirm",
+            data: { 'regId': '@ViewBag.regID' },
+            success: function (msg) {
+                $("#previous").hide();
+                $("#after").show();
+                alert(msg);
+            }
+        })
+    }
+</script>
+
+

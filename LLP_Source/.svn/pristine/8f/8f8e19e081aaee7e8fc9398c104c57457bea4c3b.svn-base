@@ -1,0 +1,94 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    line-height: 28px;
+
+  
+}
+html, body {
+    height: 100%;
+    background-color: #ECF0F5;
+     
+}
+
+.wrapper{
+      
+}
+.option_Pannel{
+    overflow: hidden;
+}
+.logo{
+    width: 35%;
+    float: left;
+    padding-left: 20px;
+}
+.options{
+    width: 65%;
+    float: right;
+    padding-left: 300px;
+    padding-top: 15px;
+   
+}
+.button{
+    display: table;
+    margin: 0 auto;
+    
+}
+  
+
+.options ul li{
+    list-style: none;
+    display: inline-block;
+
+}
+.form_Pannel{
+    padding: 10px;
+    background-color: white;
+    display: block;
+}
+.form_left{
+    float: left;
+    width: 50%;
+    padding-left: 50px;
+   
+    padding-top: 20px;
+    height: 340px;
+}
+
+.form_right{
+    float: right;
+    width: 50%;
+    padding-right: 140px;
+   
+    padding-top: 20px;
+    display: block;
+    height: 340px;
+}
+.form_left table tr td{
+    padding: 2px;
+}
+.form_right table tr td{
+    padding: 2px;
+}
+.product_Table{
+    padding: 6px;
+}
+.paging{
+    display: block;
+    overflow: hidden;
+    background-color: white;
+}
+.numbers{
+    width: 25%;
+    float: left;
+    
+}
+.combo{
+    width: 75%;
+    float: right;
+}

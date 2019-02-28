@@ -1,0 +1,66 @@
+﻿using LLP.Entities;
+using LLP.Facade;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace LLP.Web.Controllers
+{
+    public class AdminController : BaseController
+    {
+        // GET: Admin
+
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        public ActionResult Dashboard()
+        {
+          
+            return View();
+        }
+        public ActionResult LoadChapterList()
+        {
+            List<Chapter> chapterList = new List<Chapter>();
+            List<ChapterContent> cpList = new List<ChapterContent>();
+            chapterList = _Util.Facade.ChapterFacade.GetAllChapterName();
+            cpList = _Util.Facade.ChapterContentFacade.GetAllChapterName();
+            BookChapter bk = new BookChapter();
+            bk.ChapterList = chapterList;
+            bk.ContentList = cpList;
+            return View(bk);
+        }
+        public ActionResult ChapterLIst()
+        {
+            return View(_Util.Facade.ChapterContentFacade.GetAllChapterName());
+        }
+        [HttpPost]
+        public ActionResult Index(ChapterContent chapter)
+        {
+ 
+            _Util.Facade.ChapterContentFacade.InsertChapter(chapter);
+
+            return View();
+        }
+        public ActionResult Product()
+        {
+            return View();
+        }
+        public ActionResult Sells()
+        {
+            return View();
+        }
+        public ActionResult Catagory()
+        {
+            return View();
+        }
+        public ActionResult Shipment()
+        {
+            return View();
+        }
+
+    }
+}

@@ -1,0 +1,92 @@
+﻿@model LLP.Web.BookChapter
+@using Localize = LLP.Web.Ui.Helper.LanguageHelper
+@{
+    Layout = null;
+
+}
+
+<style>
+    .Chapter_List {
+        display: none;
+    }
+
+    .pre_load img {
+        width: 12pc;
+        padding-top: 188px;
+    }
+
+
+</style>
+
+<div class="pre_load">
+    <img src="~/Content/images/tenor.gif" />
+   
+</div>
+<div class="Chapter_List">
+
+    <div style="padding:10px; ">
+        <div class="treeview" id="myTable">
+            @if (Model.ChapterList != null)
+            {
+                foreach (var a in Model.ChapterList.Where(x => x.Type == "Act"))
+                {
+                    <div class="search_row">
+
+                        <h4 id="txtChapt">@Html.Raw(a.Name)</h4>
+
+                        <div class="search_content">
+                            @if (Model.ContentList != null && Model.ContentList.Count() > 0)
+                            {
+
+                                <ul class="ChapterName" id="txtChaptername">
+                                    @TreeView.GetTreeView(Model.ContentList, Model.ContentList.FirstOrDefault().ParentId, Convert.ToInt32(a.ChapterNo))
+
+                                </ul>
+                            }
+                        </div>
+
+                    </div>
+
+
+                }
+            }
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+    $(function () {
+        $(".pre_load").fadeOut(2000, function () {
+            $(".Chapter_List").fadeIn(1000)
+        });
+    });
+</script>
+<script>
+
+    $(document).ready(function () {
+
+        $(".treeview li>ul").css('display', 'none'); // Hide all 2-level ul
+
+            $(".collapsible").click(function (e) {
+                e.preventDefault();
+                $(this).toggleClass("collapse expand");
+                $(this).closest('li').children('ul').slideToggle();
+
+
+            });
+
+
+        $(".title").click(function (item) {
+
+            var clickitem = $(item.target).attr('data-location');
+            console.log(clickitem);
+            $(".Chapter_Content").load(clickitem);
+        })
+    });
+
+</script>
+
+
+

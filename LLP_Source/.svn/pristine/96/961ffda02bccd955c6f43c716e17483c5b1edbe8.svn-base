@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+ 
+}
+
+
+    <!--/.header-->
+<div class="Content">
+    <h2>Dashboard</h2>
+</div>
+
+@* Here We need some Jquery code for make this treeview collapsible *@
+
+
+
+
+
+

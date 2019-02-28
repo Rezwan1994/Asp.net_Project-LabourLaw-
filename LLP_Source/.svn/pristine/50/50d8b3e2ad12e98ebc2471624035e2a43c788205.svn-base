@@ -1,0 +1,23 @@
+﻿@model LLP.Entities.ChapterContent
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <style>
+        .chaptername {
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class=" chaptername"> 
+        <h3>@Model.CpContent</h3>
+    </div>
+</body>
+</html>

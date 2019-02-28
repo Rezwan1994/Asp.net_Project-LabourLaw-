@@ -1,0 +1,98 @@
+﻿
+@{
+    ViewBag.Title = "Catagory";
+    Layout = "~/Views/Shared/Lay_Out.cshtml";
+}
+
+<html>
+<head>
+    <title>Labour Law Partner</title>
+    <link href="~/Content/css/Catagory.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <div class="content-header">
+            <div class="pageName">
+                <h3>Manage Categories</h3>
+            </div>
+            <div class="login">
+
+                <ul>
+                    <li class="hoverc">
+                        <button type="button" class="btn btn-success">
+                            Import
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="btn btn-success">
+                            Export
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" name="importexcel" class="btn btn-primary">
+                            Add New
+                        </button>
+                    </li>
+
+                </ul>
+
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="Category">
+                <h6>Category Name <img src="A Category Name.png" alt="A Category Name" width="20" height="20"> <input type="text"></h6>
+            </div>
+            <div class="searchButton">
+                <button type="button" class="btn btn-primary btn-lg">
+                    Search
+                </button>
+            </div>
+
+            <div class="Table">
+                <table width="95%">
+
+                    <tr>
+                        <td width="70%">Name</td>
+                        <td>Published</td>
+                        <td>Display Order</td>
+                        <td>Edit</td>
+                    </tr>
+
+
+                    <tr><td><span id="allSpan"></span></td></tr>
+                </table>
+            </div>
+
+
+            <div id="myDIV" class="MenuButton">
+                <button class="btn">|<</button>
+                <button class="btn active"><</button>
+                <button class="btn">1</button>
+                <button class="btn">></button>
+                <button class="btn">>|</button>
+
+                <select name="itemsPerPage">
+                    <option value="20" selected>20</option>
+
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                items per page
+
+            </div>
+
+        </div>
+
+    </div>
+</body>
+</html>
+

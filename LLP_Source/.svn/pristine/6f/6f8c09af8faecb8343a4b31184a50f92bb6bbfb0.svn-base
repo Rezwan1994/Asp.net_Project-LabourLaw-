@@ -1,0 +1,394 @@
+﻿using LLP.DataAccess;
+using LLP.Entities;
+using LLP.Framework;
+using LLP.Framework.Utils;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web;
+
+namespace LLP.Facade
+{
+    public class MailFacade : BaseFacade
+    {
+        EmailTemplateDataAccess _EmailTemplateDataAccess = null;
+        EmailHistoryDataAccess _EmailHistoryDataAccess = null;
+        UserLoginDataAccess _UserLoginDataAccess = null;
+        GlobalSettingDataAccess _GlobalSettingDataAccess = null;
+        CompanyBranchDataAccess _CompanyBranchDataAccess = null;
+        public MailFacade() { }
+        public MailFacade(ClientContext clientContext)
+           : base(clientContext)
+        { 
+            if (_EmailTemplateDataAccess == null)
+                _EmailTemplateDataAccess = (EmailTemplateDataAccess)_ClientContext[typeof(EmailTemplateDataAccess)];
+            if (_EmailHistoryDataAccess == null)
+                _EmailHistoryDataAccess = (EmailHistoryDataAccess)_ClientContext[typeof(EmailHistoryDataAccess)]; 
+
+        }
+        private bool SentEmail(Hashtable TemplateValue, string TemplateKey, Guid CompanyId, List<Attachment> Attachments)
+        {
+ 
+
+            EmailTemplate emailTemplate = _EmailTemplateDataAccess.GetByQuery("TemplateKey='" + TemplateKey + "'").FirstOrDefault();
+            EmailParser parser = null;
+            string toEmailAddress = "";
+            if (emailTemplate == null || emailTemplate.Id == 0)
+            {
+                //Elmah.ErrorSignal.FromCurrentContext().Raise(new Exception("Template not found for key :" + TemplateKey));
+                return false;
+            }
+            if (!string.IsNullOrWhiteSpace(emailTemplate.BodyFile))
+            {
+                parser = new EmailParser(HttpContext.Current.Server.MapPath(emailTemplate.BodyFile), TemplateValue, true);
+            }
+            else if (!string.IsNullOrWhiteSpace(emailTemplate.BodyContent))
+            {
+                parser = new EmailParser(emailTemplate.BodyContent, TemplateValue, false);
+            }
+
+            MailMessage message = new MailMessage();
+            message.Body = parser.Parse();
+
+            if (emailTemplate.ToEmail.IndexOf("##") > -1)
+            {
+                EmailParser ToEmailParser = new EmailParser(emailTemplate.ToEmail, TemplateValue, false);
+                message.To.Add(new MailAddress(ToEmailParser.Parse()));
+                toEmailAddress = message.To[0].ToString();
+            }
+            else
+            {
+                message.To.Add(emailTemplate.ToEmail);
+                toEmailAddress = message.To[0].ToString();
+            }
+            if (emailTemplate.ReplyEmail.IndexOf("##") > -1)
+            {
+                EmailParser ToEmailParser = new EmailParser(emailTemplate.ReplyEmail, TemplateValue, false);
+                message.ReplyTo = new MailAddress(ToEmailParser.Parse());
+                toEmailAddress = message.To[0].ToString();
+            }
+            else
+            {
+                message.ReplyTo = new MailAddress(emailTemplate.ReplyEmail);
+            }
+
+            if (emailTemplate.FromEmail.IndexOf("##") > -1)
+            {
+                EmailParser ToEmailParser = new EmailParser(emailTemplate.FromEmail, TemplateValue, false);
+                message.From = new MailAddress(ToEmailParser.Parse());
+            }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(emailTemplate.FromName))
+                {
+                    message.From = new MailAddress(emailTemplate.FromEmail, emailTemplate.FromName);
+                }
+                else
+                {
+                    message.From = new MailAddress(emailTemplate.FromEmail);
+                }
+
+            }
+
+            if (!string.IsNullOrWhiteSpace(emailTemplate.BccEmail))
+            {
+                message.Bcc.Add(emailTemplate.BccEmail);
+            }
+
+            if (!string.IsNullOrWhiteSpace(emailTemplate.CcEmail))
+            {
+                message.CC.Add(emailTemplate.CcEmail);
+            }
+
+            if (emailTemplate.Subject.IndexOf("##") > -1)
+            {
+                EmailParser SubjectParser = new EmailParser(emailTemplate.Subject, TemplateValue, false);
+                message.Subject = SubjectParser.Parse();
+            }
+            else
+            {
+                message.Subject = emailTemplate.Subject;
+            }
+            if (Attachments != null)
+            {
+                if (Attachments.Count > 0)
+                {
+                    foreach (var attachment in Attachments)
+                    {
+                        message.Attachments.Add(attachment);
+                    }
+                }
+            }
+            message.IsBodyHtml = true;
+            message.BodyEncoding = System.Text.Encoding.UTF8;
+
+
+            try
+            {
+                SmtpClient client = new SmtpClient();
+                client.Credentials = new System.Net.NetworkCredential("noreply@piiscenter.com", "piiscenter.com");
+                client.EnableSsl = false;
+                client.Send(message);
+                //if (!HttpContext.Current.Request.IsLocal)
+                //{
+                //    SmtpClient client = new SmtpClient();
+                //    client.Credentials = new System.Net.NetworkCredential("noreply@piiscenter.com", "piiscenter.com");
+                //    client.EnableSsl = false;
+                //    client.Send(message);
+                //}
+                //SmtpClient smtp = new SmtpClient
+                //{
+                //    Host = "smtp.gmail.com",
+                //    //change the port to prt 587. This seems to be the standard for Google smtp transmissions.
+                //    Port = 587,
+                //    //enable SSL to be true, otherwise it will get kicked back by the Google server.
+                //    EnableSsl = true,
+                //    //The following properties need set as well
+                //    DeliveryMethod = SmtpDeliveryMethod.Network,
+                //    UseDefaultCredentials = false,
+                //    Credentials = new NetworkCredential("informrcloud@gmail.com", "Inf0rmrcl@ud")
+                //};
+                //smtp.Send(message);
+
+                EmailHistory emailHistory = new EmailHistory();
+                emailHistory.TemplateKey = TemplateKey;
+                emailHistory.ToEmail = toEmailAddress;
+                emailHistory.CcEmail = message.CC.ToString();
+                emailHistory.BccEmail = message.Bcc.ToString();
+                emailHistory.FromEmail = message.From.ToString();
+                emailHistory.EmailBodyContent = message.Body;
+                emailHistory.EmailSubject = message.Subject;
+                emailHistory.EmailSentDate = DateTime.Now;
+                emailHistory.LastUpdatedDate = DateTime.Now;
+                _EmailHistoryDataAccess.Insert(emailHistory);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                EmailHistory emailHistory = new EmailHistory();
+                emailHistory.TemplateKey = TemplateKey;
+                emailHistory.ToEmail = toEmailAddress;
+                emailHistory.CcEmail = message.CC.ToString();
+                emailHistory.BccEmail = message.Bcc.ToString();
+                emailHistory.FromEmail = message.From.ToString();
+                emailHistory.EmailBodyContent = message.Body;
+                emailHistory.EmailSubject = message.Subject;
+
+                emailHistory.LastUpdatedDate = DateTime.Now;
+                _EmailHistoryDataAccess.Insert(emailHistory);
+                //Logger.AddElmah(ex);
+            }
+
+
+            return false;
+        }
+
+        private bool SentEmailRemainder(Hashtable TemplateValue, string TemplateKey, List<Attachment> Attachments)
+        {
+            EmailTemplateDataAccess maildata = new EmailTemplateDataAccess();
+            EmailHistoryDataAccess mailhistory = new EmailHistoryDataAccess();
+            EmailTemplate emailTemplate = maildata.GetByQuery("TemplateKey='" + TemplateKey + "'").FirstOrDefault();
+            EmailParser parser = null;
+            string toEmailAddress = "";
+            if (emailTemplate == null || emailTemplate.Id == 0)
+            {
+                //Elmah.ErrorSignal.FromCurrentContext().Raise(new Exception("Template not found for key :" + TemplateKey));
+                return false;
+            }
+            if (!string.IsNullOrWhiteSpace(emailTemplate.BodyFile))
+            {
+                string FilePath = emailTemplate.BodyFile;
+                FilePath = System.Web.Hosting.HostingEnvironment.MapPath(FilePath);
+                parser = new EmailParser(FilePath, TemplateValue, true);
+                //parser = new EmailParser(HttpContext.Current.Server.MapPath(emailTemplate.BodyFile), TemplateValue, true);
+            }
+            else if (!string.IsNullOrWhiteSpace(emailTemplate.BodyContent))
+            {
+                parser = new EmailParser(emailTemplate.BodyContent, TemplateValue, false);
+            }
+
+            MailMessage message = new MailMessage();
+            message.Body = parser.Parse();
+
+            if (emailTemplate.ToEmail.IndexOf("##") > -1)
+            {
+                EmailParser ToEmailParser = new EmailParser(emailTemplate.ToEmail, TemplateValue, false);
+                message.To.Add(new MailAddress(ToEmailParser.Parse()));
+                toEmailAddress = message.To[0].ToString();
+            }
+            else
+            {
+                message.To.Add(emailTemplate.ToEmail);
+                toEmailAddress = message.To[0].ToString();
+            }
+            if (emailTemplate.ReplyEmail.IndexOf("##") > -1)
+            {
+                EmailParser ToEmailParser = new EmailParser(emailTemplate.ReplyEmail, TemplateValue, false);
+                message.ReplyTo = new MailAddress(ToEmailParser.Parse());
+                toEmailAddress = message.To[0].ToString();
+            }
+            else
+            {
+                message.ReplyTo = new MailAddress(emailTemplate.ReplyEmail);
+            }
+
+            if (emailTemplate.FromEmail.IndexOf("##") > -1)
+            {
+                EmailParser ToEmailParser = new EmailParser(emailTemplate.FromEmail, TemplateValue, false);
+                message.From = new MailAddress(ToEmailParser.Parse());
+            }
+            else
+            {
+                message.From = new MailAddress(emailTemplate.FromEmail);
+            }
+
+            if (!string.IsNullOrWhiteSpace(emailTemplate.BccEmail))
+            {
+                message.Bcc.Add(emailTemplate.BccEmail);
+            }
+
+            if (!string.IsNullOrWhiteSpace(emailTemplate.CcEmail))
+            {
+                message.CC.Add(emailTemplate.CcEmail);
+            }
+
+            if (emailTemplate.Subject.IndexOf("##") > -1)
+            {
+                EmailParser SubjectParser = new EmailParser(emailTemplate.Subject, TemplateValue, false);
+                message.Subject = SubjectParser.Parse();
+            }
+            else
+            {
+                message.Subject = emailTemplate.Subject;
+            }
+            if (Attachments != null)
+            {
+                if (Attachments.Count > 0)
+                {
+                    foreach (var attachment in Attachments)
+                    {
+                        message.Attachments.Add(attachment);
+                    }
+                }
+            }
+            message.IsBodyHtml = true;
+            message.BodyEncoding = System.Text.Encoding.UTF8;
+
+
+            try
+            {
+                //if (HttpContext.Current!=null && HttpContext.Current.Request.IsLocal)
+                //{
+                //SmtpClient client = new SmtpClient();
+                //client.Credentials = new System.Net.NetworkCredential("noreply@piiscenter.com", "piiscenter.com");
+                //client.EnableSsl = false;
+                //client.Send(message);
+                //}
+                SmtpClient smtp = new SmtpClient
+                {
+                    Host = "smtp.gmail.com",
+                    //change the port to prt 587. This seems to be the standard for Google smtp transmissions.
+                    Port = 587,
+                    //enable SSL to be true, otherwise it will get kicked back by the Google server.
+                    EnableSsl = true,
+                    //The following properties need set as well
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential("informrcloud@gmail.com", "Inf0rmrcl@ud")
+                };
+                smtp.Send(message);
+
+
+                EmailHistory emailHistory = new EmailHistory();
+                emailHistory.TemplateKey = TemplateKey;
+                emailHistory.ToEmail = toEmailAddress;
+                emailHistory.CcEmail = message.CC.ToString();
+                emailHistory.BccEmail = message.Bcc.ToString();
+                emailHistory.FromEmail = message.From.ToString();
+                emailHistory.EmailBodyContent = message.Body;
+                emailHistory.EmailSubject = message.Subject;
+                emailHistory.EmailSentDate = DateTime.Now;
+                emailHistory.LastUpdatedDate = DateTime.Now;
+                mailhistory.Insert(emailHistory);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                EmailHistory emailHistory = new EmailHistory();
+                emailHistory.TemplateKey = TemplateKey;
+                emailHistory.ToEmail = toEmailAddress;
+                emailHistory.CcEmail = message.CC.ToString();
+                emailHistory.BccEmail = message.Bcc.ToString();
+                emailHistory.FromEmail = message.From.ToString();
+                emailHistory.EmailBodyContent = message.Body;
+                emailHistory.EmailSubject = message.Subject;
+
+                emailHistory.LastUpdatedDate = DateTime.Now;
+                mailhistory.Insert(emailHistory);
+                //Logger.AddElmah(ex);
+            }
+
+
+            return false;
+        }
+
+        //public bool SendEmailVerify(VerifyEmail email, Guid CompanyId)
+        //{
+        //    try
+        //    {
+        //        Hashtable templateVars = new Hashtable();
+        //        templateVars.Add("NAME", email.Name);
+        //        templateVars.Add("EMAILVERIFICATIONLINK", email.EmailVerificationLink);
+
+        //        templateVars.Add("ToEmail", email.ToEmail);
+        //        if (SentEmail(templateVars, EmailTemplateKey.Registration.VerifyEmailAddress, CompanyId, null))
+        //        {
+        //            return true;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        //Logger.AddElmah(ex);
+        //    }
+
+        //    return false;
+        //}
+         
+
+        //public bool SendEstimateCreatedEmail(InvoiceCreatedEmail email, Guid gCompanyId)
+        //{
+        //    try
+        //    {
+        //        Hashtable templateVars = new Hashtable();
+
+        //        templateVars.Add("ToEmail", email.ToEmail);
+        //        templateVars.Add("BalanceDue", email.BalanceDue);
+        //        templateVars.Add("CompanyName", email.CompanyName);
+        //        templateVars.Add("CustomerName", email.CustomerName);
+        //        templateVars.Add("DueDate", email.DueDate);
+        //        templateVars.Add("InvoiceId", email.InvoiceId);
+        //        templateVars.Add("InvoiceLink", email.InvoiceLink);
+        //        templateVars.Add("EmailBody", email.EmailBody);
+
+        //        List<Attachment> att = new List<Attachment>();
+        //        att.Add(email.InvoicePdf);
+        //        if (SentEmail(templateVars, EmailTemplateKey.Estimate.EstimateEmail, gCompanyId, att))
+        //        {
+        //            return true;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        //Logger.AddElmah(ex);
+        //    }
+
+        //    return false;
+        //}
+         
+    }
+}

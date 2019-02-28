@@ -1,0 +1,88 @@
+﻿@model IEnumerable<LLP.Entities.Permission>
+
+@{
+    Layout = null;
+}
+
+
+<style>
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+</style>
+
+<div>
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>View or change permisson group</h2>
+        @{
+            foreach (var j in Model)
+            {
+
+                if (j.Selected == 1)
+                {
+                    <script>
+                        $('#permissionChack' +@j.Id ).prop('checked', true);
+                   
+                     </script>
+                }
+
+
+                <input type="checkbox" class="checkboxItem" name="vehicle" id="permissionChack@(j.Id)" value="@j.Id" onclick="SaveChecked(@j.Id)"> @j.DisplayText<br>
+
+            }
+        }
+
+       
+
+    </div>
+
+</div>
+ <script>
+     var SaveChecked = function(item){
+      
+         var permissionId = item;
+         var UserId =  $("#userid").val();
+     
+         console.log(permissionId + " " + UserId);
+         $.ajax ({
+             type: 'GET',
+             url: '/Admin/SavedChacked',
+             dataType: "json",
+             data: {permissionId:permissionId,UserId: UserId },
+             success: function (data) {
+
+                
+
+             },
+       
+
+         });
+     }
+     $(".close").click(function(){
+     
+         $(".modal-content").hide();
+     })
+ </script>
+                  

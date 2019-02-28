@@ -1,0 +1,564 @@
+﻿USE llpdb
+GO
+
+/****** Object:  StoredProcedure [dbo]..InsertInvoice    Script Date: 4/18/2018 4:00:58 PM ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[InsertInvoice]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[InsertInvoice]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE InsertInvoice
+(
+	@Id int OUTPUT,
+	@InvoiceId nvarchar(15),
+	@CustomerId uniqueidentifier,
+	@CompanyId uniqueidentifier,
+	@Amount float,
+	@Tax float,
+	@DiscountCode nvarchar(50),
+	@DiscountAmount float,
+	@TotalAmount float,
+	@Status nvarchar(50),
+	@InvoiceDate datetime,
+	@CreatedDate datetime,
+	@CreatedBy nvarchar(50),
+	@IsEstimate bit,
+	@IsBill bit,
+	@BillingAddress nvarchar(max),
+	@DueDate datetime,
+	@Terms nvarchar(50),
+	@ShippingAddress nvarchar(max),
+	@ShippingVia nvarchar(50),
+	@ShippingDate datetime,
+	@TrackingNo nvarchar(50),
+	@ShippingCost float,
+	@Discountpercent float,
+	@BalanceDue float,
+	@Deposit float,
+	@Message nvarchar(max),
+	@TaxType nvarchar(50),
+	@LastUpdatedDate datetime,
+	@Balance float,
+	@Memo nvarchar(500),
+	@InvoiceFor nvarchar(50),
+	@LateFee float,
+	@LateAmount float,
+	@InstallDate datetime,
+	@Description nvarchar(max),
+	@DiscountType nvarchar(50),
+	@BillingCycle nvarchar(50)
+)
+AS
+    INSERT INTO [dbo].[Invoice] 
+	(
+	[InvoiceId],
+	[CustomerId],
+	[CompanyId],
+	[Amount],
+	[Tax],
+	[DiscountCode],
+	[DiscountAmount],
+	[TotalAmount],
+	[Status],
+	[InvoiceDate],
+	[CreatedDate],
+	[CreatedBy],
+	[IsEstimate],
+	[IsBill],
+	[BillingAddress],
+	[DueDate],
+	[Terms],
+	[ShippingAddress],
+	[ShippingVia],
+	[ShippingDate],
+	[TrackingNo],
+	[ShippingCost],
+	[Discountpercent],
+	[BalanceDue],
+	[Deposit],
+	[Message],
+	[TaxType],
+	[LastUpdatedDate],
+	[Balance],
+	[Memo],
+	[InvoiceFor],
+	[LateFee],
+	[LateAmount],
+	[InstallDate],
+	[Description],
+	[DiscountType],
+	[BillingCycle]
+    ) 
+	VALUES 
+	(
+	@InvoiceId,
+	@CustomerId,
+	@CompanyId,
+	@Amount,
+	@Tax,
+	@DiscountCode,
+	@DiscountAmount,
+	@TotalAmount,
+	@Status,
+	@InvoiceDate,
+	@CreatedDate,
+	@CreatedBy,
+	@IsEstimate,
+	@IsBill,
+	@BillingAddress,
+	@DueDate,
+	@Terms,
+	@ShippingAddress,
+	@ShippingVia,
+	@ShippingDate,
+	@TrackingNo,
+	@ShippingCost,
+	@Discountpercent,
+	@BalanceDue,
+	@Deposit,
+	@Message,
+	@TaxType,
+	@LastUpdatedDate,
+	@Balance,
+	@Memo,
+	@InvoiceFor,
+	@LateFee,
+	@LateAmount,
+	@InstallDate,
+	@Description,
+	@DiscountType,
+	@BillingCycle
+    )
+	DECLARE @Err int
+	DECLARE @Result int
+
+	SET @Result = @@ROWCOUNT
+	SET @Err = @@ERROR 
+	If @Err <> 0 
+	BEGIN
+		SET @Id = -1
+		RETURN @Err
+	END
+	ELSE
+	BEGIN
+		If @Result = 1 
+		BEGIN
+			-- Everything is OK
+			SET @Id = @@IDENTITY
+		END
+		ELSE
+		BEGIN
+			SET @Id = -1
+			RETURN 0
+		END
+	END
+
+	RETURN @Id
+GO
+
+/****** Object:  StoredProcedure [dbo].UpdateInvoice    Script Date: 4/18/2018 4:00:58 PM ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UpdateInvoice]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[UpdateInvoice]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE UpdateInvoice
+(
+	@Id int,
+	@InvoiceId nvarchar(15),
+	@CustomerId uniqueidentifier,
+	@CompanyId uniqueidentifier,
+	@Amount float,
+	@Tax float,
+	@DiscountCode nvarchar(50),
+	@DiscountAmount float,
+	@TotalAmount float,
+	@Status nvarchar(50),
+	@InvoiceDate datetime,
+	@CreatedDate datetime,
+	@CreatedBy nvarchar(50),
+	@IsEstimate bit,
+	@IsBill bit,
+	@BillingAddress nvarchar(max),
+	@DueDate datetime,
+	@Terms nvarchar(50),
+	@ShippingAddress nvarchar(max),
+	@ShippingVia nvarchar(50),
+	@ShippingDate datetime,
+	@TrackingNo nvarchar(50),
+	@ShippingCost float,
+	@Discountpercent float,
+	@BalanceDue float,
+	@Deposit float,
+	@Message nvarchar(max),
+	@TaxType nvarchar(50),
+	@LastUpdatedDate datetime,
+	@Balance float,
+	@Memo nvarchar(500),
+	@InvoiceFor nvarchar(50),
+	@LateFee float,
+	@LateAmount float,
+	@InstallDate datetime,
+	@Description nvarchar(max),
+	@DiscountType nvarchar(50),
+	@BillingCycle nvarchar(50)
+)
+AS
+    UPDATE [dbo].[Invoice] 
+	SET
+	[InvoiceId] = @InvoiceId,
+	[CustomerId] = @CustomerId,
+	[CompanyId] = @CompanyId,
+	[Amount] = @Amount,
+	[Tax] = @Tax,
+	[DiscountCode] = @DiscountCode,
+	[DiscountAmount] = @DiscountAmount,
+	[TotalAmount] = @TotalAmount,
+	[Status] = @Status,
+	[InvoiceDate] = @InvoiceDate,
+	[CreatedDate] = @CreatedDate,
+	[CreatedBy] = @CreatedBy,
+	[IsEstimate] = @IsEstimate,
+	[IsBill] = @IsBill,
+	[BillingAddress] = @BillingAddress,
+	[DueDate] = @DueDate,
+	[Terms] = @Terms,
+	[ShippingAddress] = @ShippingAddress,
+	[ShippingVia] = @ShippingVia,
+	[ShippingDate] = @ShippingDate,
+	[TrackingNo] = @TrackingNo,
+	[ShippingCost] = @ShippingCost,
+	[Discountpercent] = @Discountpercent,
+	[BalanceDue] = @BalanceDue,
+	[Deposit] = @Deposit,
+	[Message] = @Message,
+	[TaxType] = @TaxType,
+	[LastUpdatedDate] = @LastUpdatedDate,
+	[Balance] = @Balance,
+	[Memo] = @Memo,
+	[InvoiceFor] = @InvoiceFor,
+	[LateFee] = @LateFee,
+	[LateAmount] = @LateAmount,
+	[InstallDate] = @InstallDate,
+	[Description] = @Description,
+	[DiscountType] = @DiscountType,
+	[BillingCycle] = @BillingCycle
+	WHERE ( Id = @Id )
+
+	DECLARE @Err int
+	DECLARE @Result int
+	SET @Result = @@ROWCOUNT
+	SET @Err = @@ERROR 
+
+	If @Err <> 0 
+	BEGIN
+		SET @Result = -1
+	END
+
+	RETURN @Result
+GO
+
+/****** Object:  StoredProcedure [dbo].DeleteInvoice    Script Date: 4/18/2018 4:00:58 PM ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DeleteInvoice]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[DeleteInvoice]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE DeleteInvoice
+(
+	@Id int
+)
+AS
+	DELETE [dbo].[Invoice] 
+
+    WHERE ( Id = @Id )
+
+	DECLARE @Err int
+	DECLARE @Result int
+
+	SET @Result = @@ROWCOUNT
+	SET @Err = @@ERROR 
+
+	If @Err <> 0 
+	BEGIN
+		SET @Result = -1
+	END
+
+	RETURN @Result
+GO
+
+/****** Object:  StoredProcedure [dbo].GetAllInvoice    Script Date: 4/18/2018 4:00:58 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetAllInvoice]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetAllInvoice]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetAllInvoice
+AS
+	SELECT *		
+	FROM
+		[dbo].[Invoice]
+
+RETURN @@ROWCOUNT
+GO
+
+/****** Object:  StoredProcedure [dbo].GetInvoiceById    Script Date: 4/18/2018 4:00:58 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetInvoiceById]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetInvoiceById]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetInvoiceById
+(
+	@Id int
+)
+AS
+	SELECT *		
+	FROM
+		[dbo].[Invoice]
+	WHERE ( Id = @Id )
+
+RETURN @@ROWCOUNT
+GO
+
+/****** Object:  StoredProcedure [dbo].GetInvoiceMaximumId    Script Date: 4/18/2018 4:00:58 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetInvoiceMaximumId]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetInvoiceMaximumId]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetInvoiceMaximumId
+AS
+	DECLARE @Result int
+	SET @Result = 0
+	
+	SELECT @Result = MAX(Id) 		
+	FROM
+		[dbo].[Invoice]
+
+	If @Result > 0 
+		BEGIN
+			-- Everything is OK
+			RETURN @Result
+		END
+		ELSE
+		BEGIN
+			RETURN 0
+		END
+RETURN @Result
+GO
+
+/****** Object:  StoredProcedure [dbo].GetInvoiceRowCount    Script Date: 4/18/2018 4:00:58 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetInvoiceRowCount]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetInvoiceRowCount]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetInvoiceRowCount
+AS
+	DECLARE @Result int
+	SET @Result = 0
+	SELECT @Result = COUNT(*) 		
+	FROM
+		[dbo].[Invoice]
+		
+RETURN @Result
+GO
+
+/****** Object:  StoredProcedure [dbo].GetPagedInvoice    Script Date: 4/18/2018 4:00:58 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetPagedInvoice]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetPagedInvoice]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetPagedInvoice
+(
+	@TotalRows		int	OUTPUT,
+	@PageIndex	int,
+	@RowPerPage		int,
+	@WhereClause	nvarchar(4000),
+	@SortColumn		nvarchar(128),
+	@SortOrder		nvarchar(4)
+)
+AS
+BEGIN 
+
+SET @PageIndex = isnull(@PageIndex, -1)
+SET @RowPerPage = isnull(@RowPerPage, -1)
+SET @WhereClause = isnull(@WhereClause, '')
+SET @SortColumn = isnull(@SortColumn, '')
+SET @SortOrder = isnull(@SortOrder, '')
+SET @TotalRows = 0
+SET @RowPerPage = @RowPerPage -1
+DECLARE @SQL1 nvarchar(4000)
+DECLARE @SQL2 nvarchar(4000)
+
+IF (@WhereClause != '')
+BEGIN
+	SET @WhereClause = 'WHERE ' + char(13) + @WhereClause	
+END
+
+IF (@SortColumn != '')
+BEGIN
+	SET @SortColumn = 'ORDER BY ' + @SortColumn
+
+	IF (@SortOrder != '')
+	BEGIN
+		SET @SortColumn = @SortColumn + ' ' + @SortOrder
+	END
+END
+ELSE
+BEGIN
+	SET @SortColumn = @SortColumn + ' ORDER BY [Id] ASC'
+END
+
+SET @SQL1 = 'WITH InvoiceEntries AS (
+			SELECT ROW_NUMBER() OVER ('+ @SortColumn +')AS Row,
+	[Id],
+	[InvoiceId],
+	[CustomerId],
+	[CompanyId],
+	[Amount],
+	[Tax],
+	[DiscountCode],
+	[DiscountAmount],
+	[TotalAmount],
+	[Status],
+	[InvoiceDate],
+	[CreatedDate],
+	[CreatedBy],
+	[IsEstimate],
+	[IsBill],
+	[BillingAddress],
+	[DueDate],
+	[Terms],
+	[ShippingAddress],
+	[ShippingVia],
+	[ShippingDate],
+	[TrackingNo],
+	[ShippingCost],
+	[Discountpercent],
+	[BalanceDue],
+	[Deposit],
+	[Message],
+	[TaxType],
+	[LastUpdatedDate],
+	[Balance],
+	[Memo],
+	[InvoiceFor],
+	[LateFee],
+	[LateAmount],
+	[InstallDate],
+	[Description],
+	[DiscountType],
+	[BillingCycle]
+				FROM 
+				[dbo].[Invoice]
+					'+ @WhereClause +'
+				)
+				SELECT 
+	[Id],
+	[InvoiceId],
+	[CustomerId],
+	[CompanyId],
+	[Amount],
+	[Tax],
+	[DiscountCode],
+	[DiscountAmount],
+	[TotalAmount],
+	[Status],
+	[InvoiceDate],
+	[CreatedDate],
+	[CreatedBy],
+	[IsEstimate],
+	[IsBill],
+	[BillingAddress],
+	[DueDate],
+	[Terms],
+	[ShippingAddress],
+	[ShippingVia],
+	[ShippingDate],
+	[TrackingNo],
+	[ShippingCost],
+	[Discountpercent],
+	[BalanceDue],
+	[Deposit],
+	[Message],
+	[TaxType],
+	[LastUpdatedDate],
+	[Balance],
+	[Memo],
+	[InvoiceFor],
+	[LateFee],
+	[LateAmount],
+	[InstallDate],
+	[Description],
+	[DiscountType],
+	[BillingCycle]
+				FROM 
+					InvoiceEntries
+				WHERE 
+					Row between '+ CONVERT(nvarchar(10), (@PageIndex * @RowPerPage) + 1) +'And ('+ CONVERT(nvarchar(10), (@PageIndex * @RowPerPage) +@RowPerPage+ 1) +')'
+	
+
+SET @SQL2 =		' SELECT @TotalRows = COUNT(*) 
+				FROM 
+				[dbo].[Invoice] ' + @WhereClause
+								
+EXEC sp_executesql @SQL2, N'@TotalRows int output', @TotalRows = @TotalRows output
+
+EXEC sp_executesql @SQL1
+
+RETURN @@ROWCOUNT
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].GetInvoiceByQuery    Script Date: 4/18/2018 4:00:58 PM  ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetInvoiceByQuery]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[GetInvoiceByQuery]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE GetInvoiceByQuery
+(
+	@Query	nvarchar(4000)
+)
+AS
+BEGIN 
+
+SET @Query = isnull(@Query, '')
+DECLARE @SQL1 nvarchar(4000)
+
+IF (@Query != '')
+BEGIN
+	SET @Query = 'WHERE ' + char(13) + @Query	
+END
+
+SET @SQL1 =		'SELECT * 
+				FROM 
+				[dbo].[Invoice] ' + @Query
+								
+EXEC sp_executesql @SQL1
+
+RETURN @@ROWCOUNT
+END
+GO
+

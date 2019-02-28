@@ -1,0 +1,220 @@
+﻿@model LLP.Entities.UserLogin
+@using Localize = LLP.Web.Ui.Helper.LanguageHelper
+@{
+    Layout = "~/Views/Shared/_llpLayout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    @*<meta charset="UTF-8">*@
+    <title>Sign up</title>
+    <link href="~/Content/css/signup_style.css" rel="stylesheet" />
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/pnotify.css" rel="stylesheet" />
+    <link href="~/Content/css/pnotify.buttons.css" rel="stylesheet" />
+    <link href="~/Content/css/pnotify.nonblock.css" rel="stylesheet" />
+ 
+
+</head>
+
+<body>
+  
+
+    <div id="login-box">
+        <div class="left">
+            <h1>@Localize.T("Sign up")</h1>
+
+            @Html.HiddenFor(m => m.Id)
+            <input type="hidden" id="gmailkey" value=" @ViewBag.gmailLoginkey" />
+          
+            <input type="text" id="name" datarequired="true" name ="username" placeholder=@Localize.T("Username") />
+            <label class="label hidden red-color cus-label" id="level" rel="username" style="color:red;">*This Field is Required</label>
+         
+            <input type="text" id="email" datarequired="true" dataformat="email"  name="email" placeholder=@Localize.T("Email") />
+            <label class="label hidden red-color cus-label" id="level" rel="email" style="color:red;">*Enter a valid email address</label>
+           
+            <input type="password" id="password" datarequired="true" name="password"  dataformat="password"   placeholder=@Localize.T("Password") />
+            <label class="label hidden red-color cus-label"  id="level" rel="password" style="color:red;">*Enter a valid password</label>
+           
+            <input type="password" id="repass"datarequired="true"  dataformat="confirmpassword"   name="confirmpassword" placeholder=@Localize.T("Retype password") />
+            <label class="label hidden red-color cus-label" id="level" rel="confirmpassword" style="color:red;">*Retype your password</label>
+            <input type="submit" id="signup" name ="signup_submit" value=@Localize.T("Sign me up") />
+        </div>
+
+        <div class="right">
+            <img src="~/Content/images/labour_law_logo.png" alt="Alternate Text" />
+            <span class="loginwith">Sign in with<br />social network</span>
+
+            <button class="social-signin facebook" onclick="register_user_after_facebook_login() ">@Localize.T("Log in with facebook")</button>
+            <button class="social-signin twitter">@Localize.T("Log in with Linkedin")</button>
+            <button class="social-signin google" id="googlelogin">@Localize.T("Log in with Google +")</button>
+        </div>
+        <div class="or">OR</div>
+    </div>
+
+   
+
+</body>
+
+</html>
+<script src="~/Content/scripts/jquery.min.js"></script>
+
+<script src="~/Content/scripts/pnotify.js"></script>
+<script src="~/Content/scripts/pnotify.nonblock.js"></script>
+<script src="~/Content/scripts/pnotify.buttons.js"></script>
+<script src="~/Content/scripts/googlelogin.js"></script>
+<script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};HandleGoogleApiLibrary()" onreadystatechange="if (this.readyState === 'complete') this.onload()"></script>
+<script src="~/Content/scripts/Validation.js"></script>
+<script>
+
+    var scrollToErrorMessagePublic = function () {
+        if ($($(".required").get(0)).offset() != undefined) {
+            var topcal = $($(".required").get(0)).offset().top;
+            if (topcal == 0) {
+                topcal = $($(".required").get(0)).position().top;
+                topcal -= 40;
+            } else {
+                topcal -= 180;
+            }
+            jQuery('html, body').animate({
+                scrollTop: topcal
+            }, 1000);
+        }
+    }
+    $(document).ready(function () {
+        var facebookId;
+ 
+
+
+
+            $('#signup').click(function () {
+                if (CommonUiValidation()) {
+                    var content = {};
+                    content.Id = $("#Id").val();
+                    content.UserName = $("#name").val();
+                    content.EmailAddress = $("#email").val();
+                    content.IsActive = " ";
+                    content.IsDeleted = " ";
+                    content.LastUpdatedBy = "";
+                    content.LastUpdatedDate = "";
+
+                    content.Password = $("#password").val();
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/SaveUser",
+                        data: '{content: ' + JSON.stringify(content) + '}',
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            if (response.result == true) {
+                                $("#email").val('');
+                                $("#password").val('');
+                                $("#name").val('');
+                                $("#repass").val('');
+                                console.log(response.Messege);
+                            
+                                new PNotify({
+                                    title: 'Saved Successfully',
+                                    text: " Please Activate your account",
+                                    type: 'success',
+                                    styling: 'bootstrap3'
+                                });
+                             
+                            }
+                            else {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Home/SuccessMail",
+                                    data: '{content: ' + JSON.stringify(content) + '}',
+                                    contentType: "application/json; charset=utf-8",
+                                    dataType: "json",
+                                    success: function (response) {
+                                        if (response.result == true) {
+                                        }
+                                    }
+                                });
+                                new PNotify({
+                                    title: 'email exist',
+                                    text: 'email already exist',
+                                    type: 'error',
+                                    styling: 'bootstrap3'
+                                });
+                            }
+
+
+                            //window.location.reload();
+                        }
+                    });
+                }
+                else {
+                    scrollToErrorMessagePublic();
+                }
+      
+        });
+            // Load the SDK asynchronously
+            (function (d) {
+                var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+                if (d.getElementById(id)) { return; }
+                js = d.createElement('script'); js.id = id; js.async = true;
+                js.src = "//connect.facebook.net/en_US/all.js";
+                ref.parentNode.insertBefore(js, ref);
+            }(document));
+
+
+
+            });
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: @ViewBag.facebookId,
+                cookie: true, // enable cookies to allow the server to access the session
+                xfbml: true
+            });
+
+
+        }
+        function register_user_after_facebook_login() {
+            FB.login(function (response) {
+               if (response.authResponse) {
+                    FB.api('/me', { fields: 'id,name,email,link' }, function (response) {
+                        //dummy data from local
+                       
+                        UserResitrationifnorecord(response);
+                    });
+                } else {
+                    console.log('user does not interested or not authorized.');
+                }
+            }, { scope: 'public_profile, email', return_scopes: true });
+        }
+
+        var UserResitrationifnorecord = function (fbdata) {
+            //SErver Create account
+            //server Login
+            var EmailAddress = fbdata.email;
+            var UserName = fbdata.email;
+
+            var IsActive = true;
+            var FacebookId = fbdata.id;
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/Login_by_Fb",
+                    data: '{content: ' + JSON.stringify(fbdata) + '}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response);
+                        if (response.result == true) {
+
+                            window.location.href = "/Admin/DashBoard";
+                        }
+                        else {
+                            alert('please contact with admin!!!');
+                        }
+
+                    }
+                });
+        }
+
+</script>
